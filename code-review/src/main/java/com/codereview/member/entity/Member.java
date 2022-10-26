@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
 public class Member {
   @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long memberId;
 
   private String email;
@@ -30,9 +31,14 @@ public class Member {
 
   private String phone;
 
+
+  @ElementCollection
+  @CollectionTable(joinColumns = @JoinColumn(name = "MEMBER_ID"))
+  private Set<String> skills;
+
   @Builder
   public Member(Long memberId, String email, String nickName, String password, String role,
-                   String provider, String profileImg, String githubUrl, String phone) {
+                   String provider, String profileImg, String githubUrl, String phone, Set<String> skills) {
     this.memberId = memberId;
     this.email = email;
     this.nickName = nickName;
@@ -42,6 +48,6 @@ public class Member {
     this.profileImg = profileImg;
     this.githubUrl = githubUrl;
     this.phone = phone;
+    this.skills = skills;
   }
-
 }
