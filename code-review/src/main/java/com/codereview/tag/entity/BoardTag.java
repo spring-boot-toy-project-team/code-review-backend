@@ -27,15 +27,4 @@ public class BoardTag {
         this.boardTagId = boardTagId;
     }
 
-    public void addBoard(Board board){
-        if(this.board == null && board != null){
-            this.board = board;
-        }
-    }
-
-    public void addTag(Tag tag){
-        if(this.tag == null && tag != null){
-            this.tag = tag;
-        }
-    }
 }

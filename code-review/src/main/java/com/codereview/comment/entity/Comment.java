@@ -14,6 +14,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
+    @Column(columnDefinition = "TEXT")
     private String contents;
 
     @ManyToOne
@@ -24,11 +25,5 @@ public class Comment {
     public Comment(Long commentId, String contents){
         this.commentId = commentId;
         this.contents = contents;
-    }
-
-    public void addBoard(Board board){
-        if(this.board == null && board != null){
-            this.board = board;
-        }
     }
 }

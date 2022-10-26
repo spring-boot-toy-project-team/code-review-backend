@@ -25,10 +25,4 @@ public class BoardImg {
         this.boardImgId = boardImgId;
         this.dir = dir;
     }
-
-    public void addBoard(Board board){
-        if(this.board == null && board != null){
-            this.board = board;
-        }
-    }
 }

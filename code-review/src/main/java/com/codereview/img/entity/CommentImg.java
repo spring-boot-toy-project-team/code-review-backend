@@ -1,6 +1,5 @@
 package com.codereview.img.entity;
 
-import com.codereview.board.entity.Board;
 import com.codereview.comment.entity.Comment;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -27,9 +26,4 @@ public class CommentImg {
         this.dir = dir;
     }
 
-    public void addComment(Comment comment){
-        if(this.comment == null && comment != null){
-            this.comment = comment;
-        }
-    }
 }

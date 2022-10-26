@@ -1,11 +1,9 @@
 package com.codereview.board.entity;
 
-import com.codereview.comment.entity.Comment;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -17,6 +15,7 @@ public class Board {
 
     private String title;
 
+    @Column(columnDefinition = "TEXT")
     private String contents;
 
 
