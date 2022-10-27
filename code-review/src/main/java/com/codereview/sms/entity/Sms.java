@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -18,6 +19,8 @@ public class Sms {
   private String phone;
 
   private String code;
+
+  private LocalDateTime sendAt = LocalDateTime.now();
 
   @Builder
   public Sms(Long smsId, String phone, String code) {

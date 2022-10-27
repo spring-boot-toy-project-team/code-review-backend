@@ -1,5 +1,6 @@
 package com.codereview.reviewer.entity;
 
+import com.codereview.common.audit.Auditable;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
-public class Reviewer {
+public class Reviewer extends Auditable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long reviewerId;

@@ -1,6 +1,7 @@
 package com.codereview.comment.entity;
 
 import com.codereview.board.entity.Board;
+import com.codereview.common.audit.Auditable;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
-public class Comment {
+public class Comment extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
