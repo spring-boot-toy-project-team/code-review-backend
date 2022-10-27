@@ -37,4 +37,7 @@ out/
 .vscode/
 
 ### application ###
-**/application.yml
+application.yml
+
+### env $$$
+db/.env

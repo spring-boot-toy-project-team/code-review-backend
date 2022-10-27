@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: cache
+    hostname: cache
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - "6379:6379"
