@@ -1,5 +1,6 @@
 package com.codereview.board.entity;
 
+import com.codereview.common.audit.Auditable;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
@@ -7,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
-public class Board {
+public class Board extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

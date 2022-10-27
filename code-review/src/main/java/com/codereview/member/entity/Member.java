@@ -1,5 +1,6 @@
 package com.codereview.member.entity;
 
+import com.codereview.common.audit.Auditable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @NoArgsConstructor
-public class Member {
+public class Member extends Auditable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long memberId;
