@@ -3,12 +3,14 @@ package com.codereview.member.entity;
 import com.codereview.common.audit.Auditable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Data
 @NoArgsConstructor
 public class Member extends Auditable {
   @Id

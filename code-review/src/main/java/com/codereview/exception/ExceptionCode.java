@@ -8,7 +8,8 @@ public enum ExceptionCode {
   FIELD_ERROR(400, "Field Error"),
   CONSTRAINT_VIOLATION_ERROR(400, "Constraint Violation Error"),
   NOT_IMPLEMENTATION(501, "Not Implementation"),
-  INVALID_MEMBER_STATUS(400, "Invalid member status");
+  INVALID_MEMBER_STATUS(400, "Invalid member status"),
+  ROLE_IS_NOT_EXISTS(403, "Role is not exists");
 
   @Getter
   private int status;
