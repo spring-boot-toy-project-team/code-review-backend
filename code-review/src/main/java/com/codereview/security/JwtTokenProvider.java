@@ -9,6 +9,7 @@ import io.jsonwebtoken.impl.Base64UrlCodec;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Component
@@ -37,6 +39,7 @@ public class JwtTokenProvider {
 
     private static final String ROLES = "roles";
     private final UserDetailsService userDetailsService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @PostConstruct
     protected void init(){
@@ -45,7 +48,7 @@ public class JwtTokenProvider {
 
     public TokenResponseDto.Token createTokenDto(Member member, HttpServletResponse response){
         Claims claims = Jwts.claims().setSubject(member.getEmail());
-        claims.put(ROLES, member.getRole());
+        claims.put(ROLES, member.getRoleList());
 
         Date now = new Date();
 
@@ -63,9 +66,12 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
+        redisTemplate.opsForValue().set(member.getEmail(), refreshToken,REFRESH_TOKEN_EXPIRED_IN, TimeUnit.MILLISECONDS); //redis에 refresh token 저장
+        redisTemplate.expire(member.getEmail(), REFRESH_TOKEN_EXPIRED_IN,TimeUnit.MILLISECONDS); //redis에 refresh token 만료
+
         ResponseCookie responseCookie = ResponseCookie.from(secretKey, refreshToken)
                 .path("/") //다른 엔드포인트로 가도 쿠키를 가지고 다닐수 있도록 "/" 지정
-                .sameSite("None") //동일 사이트과 크로스 사이트에 모두 쿠키 전송이 가능 //"Lax" 랑 차이가 뭘까 Lax 설정에서도 문제 없게끔 쿠키에 대한 의존성을 낮추는 것이 권장 되지만 바로 수정개발이 힘든 경우는 쿠키의 SameSite설정을 기존의 기본값이었던 None으로 설정하여 임시로 해결
+                .sameSite("Lax") //동일 사이트과 크로스 사이트에 모두 쿠키 전송이 가능 //"Lax" 랑 차이가 뭘까 Lax 설정에서도 문제 없게끔 쿠키에 대한 의존성을 낮추는 것이 권장 되지만 바로 수정개발이 힘든 경우는 쿠키의 SameSite설정을 기존의 기본값이었던 None으로 설정하여 임시로 해결
                 .httpOnly(true) //프론트엔드에서 쿠키에 접근하려면 false로 해야한다고 하는데 지금은 접근할 일이 없을거라 생각하고 true
                 .secure(true) //https끼리 쿠키를 요청하겠다
                 .maxAge(REFRESH_TOKEN_EXPIRED_IN)

@@ -2,15 +2,17 @@ package com.codereview.member.entity;
 
 import com.codereview.common.audit.Auditable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Member extends Auditable {
   @Id
@@ -52,5 +54,11 @@ public class Member extends Auditable {
     this.githubUrl = githubUrl;
     this.phone = phone;
     this.skills = skills;
+  }
+
+  public List<String> getRoleList() {
+    if(this.role.length() > 0)
+      return Arrays.asList(this.role.split(","));
+    return new ArrayList<>();
   }
 }
