@@ -30,9 +30,10 @@ public class MemberRequestDto {
         @NotBlank
         private String nickName;
 
-        @NotBlank(message = "'-'을 사용하여 휴대폰번호를 정확하게 입력해 주세요")
-        @Pattern(regexp = "\\d{3}-\\d{4}-\\d{4}")
-        private String phone;
+//        @NotBlank(message = "'-'을 사용하여 휴대폰번호를 정확하게 입력해 주세요")
+//        @Pattern(regexp = "\\d{3}-\\d{4}-\\d{4}")
+//        private String phone;
+
         private String provider;
     }
 

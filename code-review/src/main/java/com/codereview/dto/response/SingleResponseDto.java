@@ -1,4 +1,4 @@
-package main.wheelmaster.response;
+package com.codereview.dto.response;
 
 
 import lombok.AllArgsConstructor;

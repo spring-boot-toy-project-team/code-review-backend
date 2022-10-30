@@ -1,13 +1,13 @@
-package main.wheelmaster.Auth.local;
+package com.codereview.auth.local;
 
+import com.codereview.dto.token.TokenRequestDto;
+import com.codereview.dto.token.TokenResponseDto;
+import com.codereview.exception.BusinessLogicException;
+import com.codereview.exception.ExceptionCode;
+import com.codereview.member.entity.Member;
+import com.codereview.member.repository.MemberRepository;
+import com.codereview.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import main.wheelmaster.JWT.JwtTokenProvider;
-import main.wheelmaster.exception.BusinessLogicException;
-import main.wheelmaster.exception.ExceptionCode;
-import main.wheelmaster.member.entity.Member;
-import main.wheelmaster.member.repository.MemberRepository;
-import main.wheelmaster.response.token.TokenRequestDto;
-import main.wheelmaster.response.token.TokenResponseDto;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -27,6 +28,7 @@ public class AuthService {
   private final JwtTokenProvider jwtTokenProvider;
   private final PasswordEncoder passwordEncoder;
   private final RedisTemplate<String, Object> redisTemplate;
+  private final HttpServletResponse response;
 
   public TokenResponseDto.Token login(Member member) {
     Member findMember = findVerifiedMemberByEmail(member.getEmail());
@@ -34,9 +36,9 @@ public class AuthService {
     if(!passwordEncoder.matches(member.getPassword(), findMember.getPassword())) {
       throw new BusinessLogicException(ExceptionCode.PASSWORD_INCORRECT);
     }
-    TokenResponseDto.Token token = jwtTokenProvider.createTokenDto(findMember);
-    redisTemplate.opsForValue()
-      .set(findMember.getEmail(), token.getRefreshToken(), token.getRefreshTokenExpiredTime(), TimeUnit.MILLISECONDS);
+    TokenResponseDto.Token token = jwtTokenProvider.createTokenDto(findMember,response);
+//    redisTemplate.opsForValue() //tokenProvider에서 저장해야 하는지 서비스단에서 토큰을 주면서 만들어야 하는지 고민입니다
+//      .set(findMember.getEmail(), token.getRefreshToken(), token.getRefreshTokenExpiredTime(), TimeUnit.MILLISECONDS);
     return token;
   }
 

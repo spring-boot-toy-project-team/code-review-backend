@@ -9,7 +9,10 @@ public enum ExceptionCode {
   CONSTRAINT_VIOLATION_ERROR(400, "Constraint Violation Error"),
   NOT_IMPLEMENTATION(501, "Not Implementation"),
   INVALID_MEMBER_STATUS(400, "Invalid member status"),
-  ROLE_IS_NOT_EXISTS(403, "Role is not exists");
+  ROLE_IS_NOT_EXISTS(403, "Role is not exists"),
+  PASSWORD_INCORRECT(404, "Password Incorrect"),
+  TOKEN_IS_INVALID(401, "Token is invalid"),
+  REFRESH_TOKEN_IS_EXPIRED(403, "Refresh Token is expired");
 
   @Getter
   private int status;

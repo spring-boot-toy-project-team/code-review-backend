@@ -14,6 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@EntityListeners(value = MemberListner.class)
 public class Member extends Auditable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

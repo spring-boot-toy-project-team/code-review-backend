@@ -1,8 +1,9 @@
-package main.wheelmaster.member.mapper;
+package com.codereview.member.mapper;
 
-import main.wheelmaster.member.dto.MemberRequestDto;
-import main.wheelmaster.member.dto.MemberResponseDto;
-import main.wheelmaster.member.entity.Member;
+
+import com.codereview.member.dto.MemberRequestDto;
+import com.codereview.member.dto.MemberResponseDto;
+import com.codereview.member.entity.Member;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

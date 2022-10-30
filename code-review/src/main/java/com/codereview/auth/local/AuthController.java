@@ -1,15 +1,15 @@
-package main.wheelmaster.Auth.local;
+package com.codereview.auth.local;
 
 
+import com.codereview.dto.response.MessageResponseDto;
+import com.codereview.dto.response.SingleResponseWithMessageDto;
+import com.codereview.dto.token.TokenRequestDto;
+import com.codereview.dto.token.TokenResponseDto;
+import com.codereview.member.dto.MemberRequestDto;
+import com.codereview.member.entity.Member;
+import com.codereview.member.mapper.MemberMapper;
+import com.codereview.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import main.wheelmaster.member.dto.MemberRequestDto;
-import main.wheelmaster.member.entity.Member;
-import main.wheelmaster.member.mapper.MemberMapper;
-import main.wheelmaster.member.service.MemberService;
-import main.wheelmaster.response.MessageResponseDto;
-import main.wheelmaster.response.SingleResponseWithMessageDto;
-import main.wheelmaster.response.token.TokenRequestDto;
-import main.wheelmaster.response.token.TokenResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
