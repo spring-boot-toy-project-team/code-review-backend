@@ -1,10 +1,11 @@
-package com.codereview.auth.local;
+package com.codereview.auth.controller;
 
 
-import com.codereview.dto.response.MessageResponseDto;
-import com.codereview.dto.response.SingleResponseWithMessageDto;
-import com.codereview.dto.token.TokenRequestDto;
-import com.codereview.dto.token.TokenResponseDto;
+import com.codereview.auth.service.AuthService;
+import com.codereview.common.dto.response.MessageResponseDto;
+import com.codereview.common.dto.response.SingleResponseWithMessageDto;
+import com.codereview.common.dto.token.TokenRequestDto;
+import com.codereview.common.dto.token.TokenResponseDto;
 import com.codereview.member.dto.MemberRequestDto;
 import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;

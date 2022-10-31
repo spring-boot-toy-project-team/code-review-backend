@@ -1,12 +1,12 @@
-package com.codereview.auth.local;
+package com.codereview.auth.service;
 
-import com.codereview.dto.token.TokenRequestDto;
-import com.codereview.dto.token.TokenResponseDto;
-import com.codereview.exception.BusinessLogicException;
-import com.codereview.exception.ExceptionCode;
+import com.codereview.common.dto.token.TokenRequestDto;
+import com.codereview.common.dto.token.TokenResponseDto;
+import com.codereview.common.exception.BusinessLogicException;
+import com.codereview.common.exception.ExceptionCode;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
-import com.codereview.security.JwtTokenProvider;
+import com.codereview.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;

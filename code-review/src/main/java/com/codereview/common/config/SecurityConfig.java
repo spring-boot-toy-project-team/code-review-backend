@@ -1,8 +1,8 @@
-package com.codereview.config;
+package com.codereview.common.config;
 
-import com.codereview.security.JwtAccessDeniedHandler;
-import com.codereview.security.JwtAuthenticationEntryPoint;
-import com.codereview.security.JwtAuthenticationFilter;
+import com.codereview.security.jwt.JwtAccessDeniedHandler;
+import com.codereview.security.jwt.JwtAuthenticationEntryPoint;
+import com.codereview.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

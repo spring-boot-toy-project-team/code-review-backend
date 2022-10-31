@@ -1,6 +1,6 @@
 package com.codereview.advice;
 
-import com.codereview.exception.BusinessLogicException;
+import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package com.codereview.config;
+package com.codereview.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
