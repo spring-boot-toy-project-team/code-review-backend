@@ -10,20 +10,20 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class CommentImg {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentImgId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long commentImgId;
 
-    private String dir;
+  private String dir;
 
-    @ManyToOne
-    @JoinColumn(name = "COMMENT_ID")
-    private Comment comment;
+  @ManyToOne
+  @JoinColumn(name = "COMMENT_ID")
+  private Comment comment;
 
-    @Builder
-    public CommentImg(Long commentImgId, String dir){
-        this.commentImgId = commentImgId;
-        this.dir = dir;
-    }
+  @Builder
+  public CommentImg(Long commentImgId, String dir){
+    this.commentImgId = commentImgId;
+    this.dir = dir;
+  }
 
 }

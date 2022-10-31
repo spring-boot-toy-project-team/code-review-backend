@@ -12,15 +12,15 @@ import javax.persistence.Id;
 @NoArgsConstructor
 public class Tag {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long tagId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long tagId;
 
-    private String name;
+  private String name;
 
-    @Builder
-    public Tag(Long tagId, String name){
-        this.tagId = tagId;
-        this.name = name;
-    }
+  @Builder
+  public Tag(Long tagId, String name){
+    this.tagId = tagId;
+    this.name = name;
+  }
 }

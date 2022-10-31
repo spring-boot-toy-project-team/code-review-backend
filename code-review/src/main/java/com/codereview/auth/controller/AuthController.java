@@ -14,11 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.validation.Valid;
 
 @RestController
@@ -28,32 +26,41 @@ public class AuthController {
   private final MemberMapper mapper;
   private final MemberService memberService;
   private final AuthService authService;
-  private final PasswordEncoder passwordEncoder;
 
+  /**
+   * 회원 가입 API
+   */
   @PostMapping("/signup")
-  public ResponseEntity signUp(@RequestBody @Valid MemberRequestDto.SingUpDto signUpDto) {
-    signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-    Member member = mapper.signUpDtoToMember(signUpDto);
-    memberService.createMember(signUpDto);
+  public ResponseEntity<MessageResponseDto> signUp(@RequestBody @Valid MemberRequestDto.SingUpDto signUpDto) {
+    memberService.createMember(mapper.signUpDtoToMember(signUpDto));
 
-    MessageResponseDto message = MessageResponseDto.builder()
+    return new ResponseEntity<>(MessageResponseDto.builder()
       .message("WELCOME")
-      .build();
-
-    return new ResponseEntity<>(message, HttpStatus.CREATED);
+      .build(), HttpStatus.CREATED);
   }
 
+  /**
+   * 로그인 API
+   */
   @PostMapping("/login")
-  public ResponseEntity login(@RequestBody @Valid MemberRequestDto.LoginDto loginDto) {
-    TokenResponseDto.Token response = authService.login(mapper.loginDtoToMember(loginDto));
-    return new ResponseEntity<>(new SingleResponseWithMessageDto<>(response,
-      "SUCCESS"), HttpStatus.OK);
+  public ResponseEntity<MessageResponseDto> login(@RequestBody @Valid MemberRequestDto.LoginDto loginDto) {
+    authService.login(mapper.loginDtoToMember(loginDto));
+
+    return new ResponseEntity<>(MessageResponseDto.builder()
+      .message("WELCOME")
+      .build(), HttpStatus.OK);
   }
 
-  @PostMapping("/reissue")
-  public ResponseEntity reIssue(@RequestBody @Valid TokenRequestDto.ReIssue reIssue) {
-    TokenResponseDto.ReIssueToken response =  authService.reIssue(reIssue);
-    return new ResponseEntity<>(new SingleResponseWithMessageDto<>(response,
-      "SUCCESS"), HttpStatus.OK);
+  /**
+   * 토큰 재발급 API
+   */
+  @GetMapping("/reissue")
+  public ResponseEntity<MessageResponseDto> reIssue(@RequestHeader(name = "Authorization", required = true) String bearerToken,
+                                                    @CookieValue(name = "refreshToken", required = false) Cookie cookie) {
+    authService.reIssue(bearerToken, cookie);
+
+    return new ResponseEntity<>(MessageResponseDto.builder()
+      .message("SUCCESS")
+      .build(), HttpStatus.OK);
   }
 }

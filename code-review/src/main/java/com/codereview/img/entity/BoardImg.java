@@ -11,21 +11,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BoardImg {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardImgId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long boardImgId;
 
-    private String dir;
+  private String dir;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+  private LocalDateTime createdAt = LocalDateTime.now();
 
-    @ManyToOne
-    @JoinColumn(name = "BOARD_ID")
-    private Board board;
+  @ManyToOne
+  @JoinColumn(name = "BOARD_ID")
+  private Board board;
 
-    @Builder
-    public BoardImg(Long boardImgId, String dir){
-        this.boardImgId = boardImgId;
-        this.dir = dir;
-    }
+  @Builder
+  public BoardImg(Long boardImgId, String dir){
+    this.boardImgId = boardImgId;
+    this.dir = dir;
+  }
 }
