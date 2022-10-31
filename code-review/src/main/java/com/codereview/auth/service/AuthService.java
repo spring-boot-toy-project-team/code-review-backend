@@ -51,11 +51,8 @@ public class AuthService {
       throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_IS_NOT_FOUND);
     String accessToken = jwtTokenProvider.parseToken(bearerToken);
     Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-    System.out.println("parseResult: " + accessToken);
-    System.out.println(authentication.getName());
     String redisRefreshToken
       = (String) redisTemplate.opsForValue().get(authentication.getName());
-    System.out.println("redis token : " + redisRefreshToken);
     if(StringUtils.hasText(redisRefreshToken)) {
       if(redisRefreshToken.equals(refreshCookie.getValue())) // 정상
         jwtTokenProvider.createTokenDto(findVerifiedMemberByEmail(authentication.getName()), response);

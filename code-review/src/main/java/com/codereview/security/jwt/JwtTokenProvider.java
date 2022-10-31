@@ -90,7 +90,6 @@ public class JwtTokenProvider {
     if(claims.get(ROLES) == null)
       throw new BusinessLogicException(ExceptionCode.ROLE_IS_NOT_EXISTS);
     UserDetails userDetails = userDetailsService.loadUserByUsername(claims.getSubject());
-    System.out.println("userDetails get userName " + userDetails.getUsername());
     return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
   }
 

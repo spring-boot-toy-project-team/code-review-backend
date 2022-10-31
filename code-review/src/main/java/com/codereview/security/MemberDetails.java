@@ -49,7 +49,6 @@ public class MemberDetails implements UserDetails {
 
   @Override
   public String getUsername() {
-    System.out.println("getUserName");
     return this.email;
   }
 
