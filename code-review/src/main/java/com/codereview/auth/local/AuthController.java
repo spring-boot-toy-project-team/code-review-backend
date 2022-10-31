@@ -30,8 +30,7 @@ public class AuthController {
   private final PasswordEncoder passwordEncoder;
 
   @PostMapping("/signup")
-  public ResponseEntity signUp(@RequestBody @Valid MemberRequestDto.singUpDto signUpDto) {
-    signUpDto.setProvider(signUpDto.getProvider());
+  public ResponseEntity signUp(@RequestBody @Valid MemberRequestDto.SingUpDto signUpDto) {
     signUpDto.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
     Member member = mapper.signUpDtoToMember(signUpDto);
     memberService.createMember(signUpDto);
@@ -44,7 +43,7 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity login(@RequestBody @Valid MemberRequestDto.loginDto loginDto) {
+  public ResponseEntity login(@RequestBody @Valid MemberRequestDto.LoginDto loginDto) {
     TokenResponseDto.Token response = authService.login(mapper.loginDtoToMember(loginDto));
     return new ResponseEntity<>(new SingleResponseWithMessageDto<>(response,
       "SUCCESS"), HttpStatus.OK);

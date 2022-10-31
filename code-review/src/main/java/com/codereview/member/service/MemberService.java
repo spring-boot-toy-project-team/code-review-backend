@@ -24,12 +24,12 @@ public class MemberService {
     private final MemberMapper mapper;
 
     @Transactional(rollbackFor = BusinessLogicException.class)
-    public Member createMember(singUpDto dto) {
+    public Member createMember(SingUpDto dto) {
         verifyEmail(mapper.signUpDtoToMember(dto).getEmail());
         return memberRepository.save(mapper.signUpDtoToMember(dto));
     }
 
-    public MemberResponseDto.UpdateDto updateMember(updateDto member) {
+    public MemberResponseDto.UpdateDto updateMember(UpdateDto member) {
 
         Member findMember = findVerifiedMember(member.getMemberId());
 

@@ -8,13 +8,13 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface MemberMapper {
-    Member signUpDtoToMember(MemberRequestDto.singUpDto singUpDto);
+    Member signUpDtoToMember(MemberRequestDto.SingUpDto singUpDto);
 
-    Member loginDtoToMember(MemberRequestDto.loginDto loginDto);
+    Member loginDtoToMember(MemberRequestDto.LoginDto loginDto);
 
     MemberResponseDto.MemberInfo memberToMemberInfo(Member member);
 
-    Member updateDtoToMember(MemberRequestDto.updateDto updateDto);
+    Member updateDtoToMember(MemberRequestDto.UpdateDto updateDto);
 
     MemberResponseDto.UpdateDto memberToUpdateDto(Member member);
 }

@@ -14,14 +14,14 @@ public class MemberDetails implements UserDetails { //사용자의 정보를 담
     private long memberId;
     private String nickName;
     private String email;
-    private Collection<? extends GrantedAuthority> role;
+    private Collection<? extends GrantedAuthority> roles;
     private Map<String, Object> attributes;
 
-    public MemberDetails(long memberId, String nickName, String email, Collection<? extends GrantedAuthority> role) {
+    public MemberDetails(long memberId, String nickName, String email, Collection<? extends GrantedAuthority> roles) {
         this.memberId = memberId;
         this.nickName = nickName;
         this.email = email;
-        this.role = role;
+        this.roles = roles;
     }
 
     public static MemberDetails create(Member member){
@@ -34,7 +34,7 @@ public class MemberDetails implements UserDetails { //사용자의 정보를 담
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.role;
+        return this.roles;
     }
 
     @Override

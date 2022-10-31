@@ -27,7 +27,7 @@ public class Member extends Auditable {
   @JsonIgnore
   private String password;
 
-  private String role;
+  private String roles;
 
   private String provider;
 
@@ -43,13 +43,13 @@ public class Member extends Auditable {
   private Set<String> skills;
 
   @Builder
-  public Member(Long memberId, String email, String nickName, String password, String role,
+  public Member(Long memberId, String email, String nickName, String password, String roles,
                    String provider, String profileImg, String githubUrl, String phone, Set<String> skills) {
     this.memberId = memberId;
     this.email = email;
     this.nickName = nickName;
     this.password = password;
-    this.role = role;
+    this.roles = roles;
     this.provider = provider;
     this.profileImg = profileImg;
     this.githubUrl = githubUrl;
@@ -58,8 +58,8 @@ public class Member extends Auditable {
   }
 
   public List<String> getRoleList() {
-    if(this.role.length() > 0)
-      return Arrays.asList(this.role.split(","));
+    if(this.roles.length() > 0)
+      return Arrays.asList(this.roles.split(","));
     return new ArrayList<>();
   }
 }
