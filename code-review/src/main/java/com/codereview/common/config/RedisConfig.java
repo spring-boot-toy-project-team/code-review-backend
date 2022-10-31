@@ -1,4 +1,4 @@
-package com.codereview.config;
+package com.codereview.common.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

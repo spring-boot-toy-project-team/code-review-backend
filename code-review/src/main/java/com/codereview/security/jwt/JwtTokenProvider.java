@@ -1,10 +1,9 @@
-package com.codereview.security;
+package com.codereview.security.jwt;
 
-import com.codereview.dto.token.TokenResponseDto;
-import com.codereview.exception.BusinessLogicException;
-import com.codereview.exception.ExceptionCode;
+import com.codereview.common.dto.token.TokenResponseDto;
+import com.codereview.common.exception.BusinessLogicException;
+import com.codereview.common.exception.ExceptionCode;
 import com.codereview.member.entity.Member;
-import com.nimbusds.oauth2.sdk.token.BearerAccessToken;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.impl.Base64UrlCodec;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;

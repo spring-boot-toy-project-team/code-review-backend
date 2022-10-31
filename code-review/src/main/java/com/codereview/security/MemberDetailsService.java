@@ -1,4 +1,4 @@
-package com.codereview.auth;
+package com.codereview.security;
 
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;

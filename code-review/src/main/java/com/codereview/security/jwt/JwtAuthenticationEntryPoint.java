@@ -1,4 +1,4 @@
-package com.codereview.security;
+package com.codereview.security.jwt;
 
 
 import org.springframework.security.core.AuthenticationException;

@@ -1,4 +1,4 @@
-package com.codereview.dto.token;
+package com.codereview.common.dto.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

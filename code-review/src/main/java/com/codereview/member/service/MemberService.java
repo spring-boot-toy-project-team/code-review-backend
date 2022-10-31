@@ -1,7 +1,7 @@
 package com.codereview.member.service;
 
-import com.codereview.exception.BusinessLogicException;
-import com.codereview.exception.ExceptionCode;
+import com.codereview.common.exception.BusinessLogicException;
+import com.codereview.common.exception.ExceptionCode;
 import com.codereview.member.dto.MemberResponseDto;
 import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;

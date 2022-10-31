@@ -1,4 +1,4 @@
-package com.codereview.exception;
+package com.codereview.common.exception;
 
 import lombok.Getter;
 

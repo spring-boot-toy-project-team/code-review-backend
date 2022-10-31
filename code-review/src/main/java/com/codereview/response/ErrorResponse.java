@@ -1,6 +1,6 @@
 package com.codereview.response;
 
-import com.codereview.exception.ExceptionCode;
+import com.codereview.common.exception.ExceptionCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;

@@ -1,4 +1,4 @@
-package com.codereview.dto.response;
+package com.codereview.common.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
