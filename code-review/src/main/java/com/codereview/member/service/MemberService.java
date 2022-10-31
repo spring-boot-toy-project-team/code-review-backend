@@ -7,17 +7,15 @@ import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;
 import com.codereview.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static com.codereview.member.dto.MemberRequestDto.*;
+import static com.codereview.member.dto.MemberRequestDto.UpdateDto;
 
 @Service
-@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class MemberService {
@@ -57,7 +55,7 @@ public class MemberService {
   }
 
   @Transactional(readOnly = true)
-  public Member findVerifiedMemberByEmail(String email) {
+  private Member findVerifiedMemberByEmail(String email) {
     return memberRepository.findByEmail(email)
       .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
   }
@@ -68,7 +66,7 @@ public class MemberService {
   }
 
   @Transactional(readOnly = true)
-  public Member findVerifiedMember(long memberId) {
+  private Member findVerifiedMember(long memberId) {
     return memberRepository.findById(memberId)
       .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
   }
