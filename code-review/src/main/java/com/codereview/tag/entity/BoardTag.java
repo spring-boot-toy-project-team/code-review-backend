@@ -10,21 +10,21 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class BoardTag {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardTagId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long boardTagId;
 
-    @ManyToOne
-    @JoinColumn(name = "BOARD_ID")
-    private Board board;
+  @ManyToOne
+  @JoinColumn(name = "BOARD_ID")
+  private Board board;
 
-    @ManyToOne
-    @JoinColumn(name = "TAG_ID")
-    private Tag tag;
+  @ManyToOne
+  @JoinColumn(name = "TAG_ID")
+  private Tag tag;
 
-    @Builder
-    public BoardTag(Long boardTagId){
-        this.boardTagId = boardTagId;
-    }
+  @Builder
+  public BoardTag(Long boardTagId){
+    this.boardTagId = boardTagId;
+  }
 
 }

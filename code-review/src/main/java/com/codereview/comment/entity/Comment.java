@@ -11,20 +11,20 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Comment extends Auditable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long commentId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long commentId;
 
-    @Column(columnDefinition = "TEXT")
-    private String contents;
+  @Column(columnDefinition = "TEXT")
+  private String contents;
 
-    @ManyToOne
-    @JoinColumn(name = "BOARD_ID")
-    private Board board;
+  @ManyToOne
+  @JoinColumn(name = "BOARD_ID")
+  private Board board;
 
-    @Builder
-    public Comment(Long commentId, String contents){
-        this.commentId = commentId;
-        this.contents = contents;
-    }
+  @Builder
+  public Comment(Long commentId, String contents){
+    this.commentId = commentId;
+    this.contents = contents;
+  }
 }

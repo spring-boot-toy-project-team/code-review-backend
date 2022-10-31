@@ -19,40 +19,43 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig { //스프링 시큐리티에 필요한 설정
+public class SecurityConfig {
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint; //인증정보 없을때 401
+  private final JwtAccessDeniedHandler jwtAccessDeniedHandler; //접근 권한 없을때 403
 
+  @Bean
+  public PasswordEncoder passwordEncoder(){
+    return new BCryptPasswordEncoder();
+  }
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint; //인증정보 없을때 401
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler; //접근 권한 없을때 403
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+    http.csrf().disable();
+    http.headers().frameOptions().disable();
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      .and()
+      .formLogin().disable()
+      .httpBasic().disable()
+      .apply(new CustomDsl());
+    http.authorizeRequests()
+      .antMatchers("/api/**")
+        .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+      .anyRequest()
+        .permitAll();
+    http.exceptionHandling()
+      .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+      .accessDeniedHandler(jwtAccessDeniedHandler);
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+    return http.build();
+  }
+
+  public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
+    @Override
+    public void configure(HttpSecurity builder) throws Exception {
+      AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
+      builder
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .formLogin().disable()
-                .httpBasic().disable()
-                        .apply(new CustomDsl());
-        http.exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler);
-
-        return http.build();
-    }
-
-    public class CustomDsl extends AbstractHttpConfigurer<CustomDsl, HttpSecurity> {
-        @Override
-        public void configure(HttpSecurity builder) throws Exception {
-            AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
-            builder
-                    .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        }
-    }
+  }
 }

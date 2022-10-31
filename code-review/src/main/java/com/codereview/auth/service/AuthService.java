@@ -1,7 +1,6 @@
 package com.codereview.auth.service;
 
 import com.codereview.common.dto.token.TokenRequestDto;
-import com.codereview.common.dto.token.TokenResponseDto;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.member.entity.Member;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -29,29 +29,36 @@ public class AuthService {
   private final RedisTemplate<String, Object> redisTemplate;
   private final HttpServletResponse response;
 
-  public TokenResponseDto.Token login(Member member) {
+  /**
+   * 로그인 메서드
+   */
+  public void login(Member member) {
     Member findMember = findVerifiedMemberByEmail(member.getEmail());
 
     if(!passwordEncoder.matches(member.getPassword(), findMember.getPassword())) {
-      throw new BusinessLogicException(ExceptionCode.PASSWORD_INCORRECT);
+      throw new BusinessLogicException(ExceptionCode.MEMBER_INFO_INCORRECT);
     }
-    TokenResponseDto.Token token = jwtTokenProvider.createTokenDto(findMember,response);
-//    redisTemplate.opsForValue() //tokenProvider에서 저장해야 하는지 서비스단에서 토큰을 주면서 만들어야 하는지 고민입니다
-//      .set(findMember.getEmail(), token.getRefreshToken(), token.getRefreshTokenExpiredTime(), TimeUnit.MILLISECONDS);
-    return token;
+    jwtTokenProvider.createTokenDto(findMember,response);
   }
 
-  public String getCurrentMember() {
-    return SecurityContextHolder.getContext().getAuthentication().getName();
-  }
-
-  public TokenResponseDto.ReIssueToken reIssue(TokenRequestDto.ReIssue reIssue) {
-    Authentication authentication = jwtTokenProvider.getAuthentication(reIssue.getAccessToken());
+  /**
+   * 토큰 재발급 메서드
+   */
+  public void reIssue(String bearerToken, Cookie refreshCookie) {
+    if(refreshCookie == null)
+      throw new BusinessLogicException(ExceptionCode.COOKIE_IS_NOT_EXISTS);
+    if(bearerToken == null)
+      throw new BusinessLogicException(ExceptionCode.AUTHORIZATION_IS_NOT_FOUND);
+    String accessToken = jwtTokenProvider.parseToken(bearerToken);
+    Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
+    System.out.println("parseResult: " + accessToken);
+    System.out.println(authentication.getName());
     String redisRefreshToken
       = (String) redisTemplate.opsForValue().get(authentication.getName());
+    System.out.println("redis token : " + redisRefreshToken);
     if(StringUtils.hasText(redisRefreshToken)) {
-      if(redisRefreshToken.equals(reIssue.getRefreshToken())) // 정상
-        return jwtTokenProvider.createReIssueTokenDto(findVerifiedMemberByEmail(authentication.getName()));
+      if(redisRefreshToken.equals(refreshCookie.getValue())) // 정상
+        jwtTokenProvider.createTokenDto(findVerifiedMemberByEmail(authentication.getName()), response);
       else // refresh 토큰 불일치
         throw new BusinessLogicException(ExceptionCode.TOKEN_IS_INVALID);
     } else { // refresh 토큰 만료
@@ -59,11 +66,12 @@ public class AuthService {
     }
   }
 
+  /**
+   * 회원 정보 조회 메서드
+   */
   @Transactional(readOnly = true)
   public Member findVerifiedMemberByEmail(String email) {
     Optional<Member> optionalMember = memberRepository.findByEmail(email);
-    return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+    return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_INFO_INCORRECT));
   }
-
-
 }

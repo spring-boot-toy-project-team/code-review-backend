@@ -10,21 +10,21 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Board extends Auditable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long boardId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long boardId;
 
-    private String title;
+  private String title;
 
-    @Column(columnDefinition = "TEXT")
-    private String contents;
+  @Column(columnDefinition = "TEXT")
+  private String contents;
 
 
-    @Builder
-    public Board(Long boardId, String title, String contents){
-        this.boardId = boardId;
-        this.title = title;
-        this.contents = contents;
-    }
+  @Builder
+  public Board(Long boardId, String title, String contents){
+    this.boardId = boardId;
+    this.title = title;
+    this.contents = contents;
+  }
 
 }
