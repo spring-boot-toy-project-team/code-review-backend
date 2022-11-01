@@ -1,5 +1,6 @@
 package com.codereview.common.config;
 
+import com.codereview.security.RestAuthenticationEntryPoint;
 import com.codereview.security.jwt.JwtAccessDeniedHandler;
 import com.codereview.security.jwt.JwtAuthenticationEntryPoint;
 import com.codereview.security.jwt.JwtAuthenticationFilter;
@@ -19,7 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig{
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint; //인증정보 없을때 401
   private final JwtAccessDeniedHandler jwtAccessDeniedHandler; //접근 권한 없을때 403
@@ -37,6 +38,23 @@ public class SecurityConfig {
       .and()
       .formLogin().disable()
       .httpBasic().disable()
+            .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
+            .and()
+            .authorizeRequests()
+            .antMatchers("/auth/**", "/oauth2/**").permitAll()
+            .anyRequest().authenticated()
+            .and()
+            .oauth2Login()
+            .authorizationEndpoint().baseUri("/oauth2/authorization")
+            .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
+            .and()
+            .redirectionEndpoint().baseUri("/login/oauth2/code/*")
+            .and()
+            .userInfoEndpoint().userService(customOauth2UserService)
+            .and()
+            .successHandler(oauth2AuthenticationSuccessHandler)
+            .failureHandler(oAuth2AuthenticationFailureHandler)
+            .and()
       .apply(new CustomDsl());
     http.authorizeRequests()
       .antMatchers("/api/**")
