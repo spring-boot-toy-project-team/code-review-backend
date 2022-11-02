@@ -4,6 +4,8 @@ import com.codereview.security.RestAuthenticationEntryPoint;
 import com.codereview.security.jwt.JwtAccessDeniedHandler;
 import com.codereview.security.jwt.JwtAuthenticationEntryPoint;
 import com.codereview.security.jwt.JwtAuthenticationFilter;
+import com.codereview.security.oauth.CustomOAuth2UserService;
+import com.codereview.security.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,10 +26,16 @@ public class SecurityConfig{
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint; //인증정보 없을때 401
   private final JwtAccessDeniedHandler jwtAccessDeniedHandler; //접근 권한 없을때 403
+  private final CustomOAuth2UserService customOAuth2UserService;
 
   @Bean
   public PasswordEncoder passwordEncoder(){
     return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public HttpCookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository(){
+    return new HttpCookieOAuth2AuthorizationRequestRepository();
   }
 
   @Bean
@@ -52,7 +60,7 @@ public class SecurityConfig{
             .and()
             .redirectionEndpoint().baseUri("/login/oauth2/code/*")
             .and()
-            .userInfoEndpoint().userService(customOauth2UserService)
+            .userInfoEndpoint().userService(customOAuth2UserService)
             .and()
             .successHandler(oauth2AuthenticationSuccessHandler)
             .failureHandler(oAuth2AuthenticationFailureHandler)
