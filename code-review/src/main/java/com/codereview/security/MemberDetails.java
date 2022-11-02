@@ -1,17 +1,17 @@
 package com.codereview.security;
 
 import com.codereview.member.entity.Member;
-import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
 @NoArgsConstructor
-public class MemberDetails implements UserDetails {
+public class MemberDetails implements UserDetails, OAuth2User {
   private long memberId;
   private String nickName;
   private String email;
@@ -33,8 +33,14 @@ public class MemberDetails implements UserDetails {
     return new MemberDetails(member.getMemberId(), member.getNickName(), member.getEmail(), authorities);
   }
 
+
   public Long getId() {
     return this.memberId;
+  }
+
+  @Override
+  public Map<String, Object> getAttributes() {
+    return attributes;
   }
 
   @Override
@@ -70,5 +76,10 @@ public class MemberDetails implements UserDetails {
   @Override
   public boolean isEnabled() {
     return true;
+  }
+
+  @Override
+  public String getName() {
+    return this.nickName;
   }
 }
