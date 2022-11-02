@@ -1,4 +1,4 @@
-package com.codereview.security.oauth;
+package com.codereview.security.oauth.info;
 
 import com.codereview.common.exception.OAuth2AuthenticationProcessingException;
 import com.codereview.member.entity.AuthProvider;

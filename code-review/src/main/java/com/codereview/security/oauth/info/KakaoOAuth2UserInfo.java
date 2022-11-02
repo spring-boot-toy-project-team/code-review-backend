@@ -1,4 +1,4 @@
-package com.codereview.security.oauth;
+package com.codereview.security.oauth.info;
 
 import java.util.Map;
 
