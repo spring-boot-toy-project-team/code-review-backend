@@ -96,4 +96,13 @@ public class MemberDetails implements UserDetails, OAuth2User {
   public String getRole(){
     return String.join(",", roles);
   }
+
+  public Member getMember() {
+    return Member.builder()
+            .email(this.email)
+            .memberId(this.memberId)
+            .nickName(this.nickName)
+            .roles(getRole())
+            .build();
+  }
 }

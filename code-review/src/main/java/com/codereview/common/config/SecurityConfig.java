@@ -1,15 +1,19 @@
 package com.codereview.common.config;
 
+import com.codereview.security.MemberDetailsService;
 import com.codereview.security.RestAuthenticationEntryPoint;
 import com.codereview.security.jwt.JwtAccessDeniedHandler;
 import com.codereview.security.jwt.JwtAuthenticationEntryPoint;
 import com.codereview.security.jwt.JwtAuthenticationFilter;
 import com.codereview.security.oauth.CustomOAuth2UserService;
 import com.codereview.security.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.codereview.security.oauth.info.OAuth2AuthenticationFailureHandler;
+import com.codereview.security.oauth.info.OAuth2AuthenticationSuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -27,6 +31,9 @@ public class SecurityConfig{
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint; //인증정보 없을때 401
   private final JwtAccessDeniedHandler jwtAccessDeniedHandler; //접근 권한 없을때 403
   private final CustomOAuth2UserService customOAuth2UserService;
+  private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+  private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+  private final MemberDetailsService memberDetailsService;
 
   @Bean
   public PasswordEncoder passwordEncoder(){
@@ -40,6 +47,11 @@ public class SecurityConfig{
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+
+    AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+    authenticationManagerBuilder.userDetailsService(memberDetailsService).passwordEncoder(passwordEncoder());
+    AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
+
     http.csrf().disable();
     http.headers().frameOptions().disable();
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -62,15 +74,10 @@ public class SecurityConfig{
             .and()
             .userInfoEndpoint().userService(customOAuth2UserService)
             .and()
-            .successHandler(oauth2AuthenticationSuccessHandler)
+            .successHandler(oAuth2AuthenticationSuccessHandler)
             .failureHandler(oAuth2AuthenticationFailureHandler)
             .and()
       .apply(new CustomDsl());
-    http.authorizeRequests()
-      .antMatchers("/api/**")
-        .access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-      .anyRequest()
-        .permitAll();
     http.exceptionHandling()
       .authenticationEntryPoint(jwtAuthenticationEntryPoint)
       .accessDeniedHandler(jwtAccessDeniedHandler);

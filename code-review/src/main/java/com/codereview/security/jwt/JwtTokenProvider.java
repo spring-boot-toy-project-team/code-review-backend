@@ -1,5 +1,6 @@
 package com.codereview.security.jwt;
 
+import com.codereview.common.dto.token.TokenResponseDto;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.member.entity.Member;
@@ -47,7 +48,7 @@ public class JwtTokenProvider {
    * 토큰 생성 메서드
    * accessToekn -> header, refreshToken -> cookie 저장
    */
-  public void createTokenDto(Member member, HttpServletResponse response){
+  public TokenResponseDto.Token createTokenDto(Member member, HttpServletResponse response){
     Claims claims = Jwts.claims().setSubject(member.getEmail());
     claims.put(ROLES, member.getRoleList());
 
@@ -79,6 +80,11 @@ public class JwtTokenProvider {
 
     response.addHeader("Authorization", GRANT_TYPE + accessToken);
     response.addHeader("Set-Cookie",responseCookie.toString());
+
+    return TokenResponseDto.Token.builder()
+            .grantType("Bearer")
+            .accessToken(accessToken)
+            .build();
   }
 
   /**
