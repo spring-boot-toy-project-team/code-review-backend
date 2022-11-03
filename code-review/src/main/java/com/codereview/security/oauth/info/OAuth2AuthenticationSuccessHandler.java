@@ -53,7 +53,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         
         String targetUri = redirectUri.orElse(getDefaultTargetUrl());
         MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
-        TokenResponseDto.Token accessToken = jwtTokenProvider.createTokenDto(memberDetails.getMember(), response);
+        accessToken = jwtTokenProvider.createTokenDto(memberDetails.getMember(), response);
         return UriComponentsBuilder.fromUriString(targetUri)
                 .queryParam("error", "")
                 .queryParam("accessToken", accessToken)

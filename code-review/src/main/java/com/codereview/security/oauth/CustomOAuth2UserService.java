@@ -44,23 +44,24 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOauth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(),
                 oAuth2User.getAttributes());
 
-        if (StringUtils.isBlank(oAuth2UserInfo.getEmail()))
+        if (oAuth2UserInfo.getEmail().isEmpty())
             throw new OAuth2AuthenticationProcessingException("Empty Email");
 
         Optional<Member> memberOptional = memberRepository.findByEmail(oAuth2UserInfo.getEmail());
         Member member;
         if (memberOptional.isPresent()){
             member = memberOptional.get();
-            if (!authProvider.equals(member.getProvider()))
+            if (!authProvider.equals(member.getProvider())) {
                 throw new OAuth2AuthenticationProcessingException("Already SignUp Other Provider");
+            }
             member = updateMember(member, authProvider);
         }else {
-            member = createMember(authProvider, oAuth2UserInfo);
+            member = createMember(oAuth2UserInfo, authProvider);
         }
         return MemberDetails.create(member,oAuth2User.getAttributes());
     }
 
-    private Member createMember(AuthProvider authProvider, OAuth2UserInfo oAuth2UserInfo){
+    private Member createMember( OAuth2UserInfo oAuth2UserInfo, AuthProvider authProvider){
         Member member = Member.builder()
                 .email(oAuth2UserInfo.getEmail())
                 .profileImg(oAuth2UserInfo.getImageUrl())
