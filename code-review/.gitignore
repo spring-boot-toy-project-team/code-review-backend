@@ -39,7 +39,7 @@ out/
 ### application ###
 application.yml
 application-app.yml
-applicaiton-oauth.yml
+application-oauth.yml
 
 ### env $$$
 db/.env
