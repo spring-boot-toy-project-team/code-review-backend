@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -22,10 +23,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.CorsFilter;
+
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,
+        prePostEnabled = true
+)
 public class SecurityConfig{
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint; //인증정보 없을때 401
@@ -34,6 +42,7 @@ public class SecurityConfig{
   private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
   private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
   private final MemberDetailsService memberDetailsService;
+  private final CorsFilter corsFilter;
 
   @Bean
   public PasswordEncoder passwordEncoder(){
@@ -47,7 +56,6 @@ public class SecurityConfig{
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-
     AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
     authenticationManagerBuilder.userDetailsService(memberDetailsService).passwordEncoder(passwordEncoder());
     AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
@@ -56,8 +64,10 @@ public class SecurityConfig{
     http.headers().frameOptions().disable();
     http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       .and()
-      .formLogin().disable()
-      .httpBasic().disable()
+            .formLogin().disable()
+            .httpBasic().disable()
+            .headers().frameOptions().disable()
+            .and()
             .exceptionHandling().authenticationEntryPoint(new RestAuthenticationEntryPoint())
             .and()
             .authorizeRequests()
@@ -66,8 +76,9 @@ public class SecurityConfig{
             .anyRequest()
             .permitAll()
             .and()
+            .authenticationManager(authenticationManager)
             .oauth2Login()
-            .authorizationEndpoint().baseUri("/oauth2/authorization")
+            .authorizationEndpoint().baseUri("/login/oauth2/authorization")
             .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
             .and()
             .redirectionEndpoint().baseUri("/login/oauth2/code/*")
@@ -77,7 +88,7 @@ public class SecurityConfig{
             .successHandler(oAuth2AuthenticationSuccessHandler)
             .failureHandler(oAuth2AuthenticationFailureHandler)
             .and()
-      .apply(new CustomDsl());
+                    .apply(new CustomDsl());
     http.exceptionHandling()
       .authenticationEntryPoint(jwtAuthenticationEntryPoint)
       .accessDeniedHandler(jwtAccessDeniedHandler);
@@ -90,6 +101,7 @@ public class SecurityConfig{
     public void configure(HttpSecurity builder) throws Exception {
       AuthenticationManager authenticationManager = builder.getSharedObject(AuthenticationManager.class);
       builder
+              .addFilter(corsFilter)
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     }
   }
