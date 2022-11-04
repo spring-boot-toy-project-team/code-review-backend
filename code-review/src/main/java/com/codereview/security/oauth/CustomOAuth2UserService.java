@@ -65,7 +65,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     Member member = Member.builder()
       .email(oAuth2UserInfo.getEmail())
       .profileImg(oAuth2UserInfo.getImageUrl())
-      .roles("ROLE_USER")
+      .roles("ROLE_GUEST")
       .provider(authProvider.name())
       .build();
     return memberRepository.save(member);
