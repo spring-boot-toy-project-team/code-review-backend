@@ -48,7 +48,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     Member member;
     if (memberOptional.isPresent()){
       member = memberOptional.get();
-      if (!authProvider.equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
+      if (!authProvider.equals(member.getProvider())) {
         throw new OAuth2AuthenticationProcessingException("Already SignUp Other Provider");
       }
       member = updateMember(member, authProvider);
