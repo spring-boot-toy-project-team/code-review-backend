@@ -25,12 +25,12 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final MemberMapper mapper;
   private final PasswordEncoder passwordEncoder;
-//  private final AuthProvider authProvider;
+
   @Transactional(rollbackFor = BusinessLogicException.class)
   public Member createMember(Member member) {
     member.setPassword(passwordEncoder.encode(member.getPassword()));
     member.setRoles("ROLE_USER");
-//    member.setProvider(authProvider);
+    member.setProvider(AuthProvider.local);
     verifyEmail(member.getEmail());
     return memberRepository.save(member);
   }
