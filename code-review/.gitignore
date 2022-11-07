@@ -38,6 +38,8 @@ out/
 
 ### application ###
 application.yml
+application-app.yml
+application-oauth.yml
 
 ### env $$$
 db/.env
