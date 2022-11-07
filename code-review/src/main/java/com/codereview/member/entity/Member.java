@@ -28,6 +28,7 @@ public class Member extends Auditable {
 
   private String roles;
 
+  @Enumerated(value = EnumType.STRING)
   private AuthProvider provider;
 
   private String profileImg;
