@@ -48,7 +48,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     Member member;
     if (memberOptional.isPresent()){
       member = memberOptional.get();
-      if (authProvider != member.getProvider()) {
+      if (!authProvider.equals(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()))) {
         throw new OAuth2AuthenticationProcessingException("Already SignUp Other Provider");
       }
       member = updateMember(member, authProvider);
@@ -64,7 +64,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
       .profileImg(oAuth2UserInfo.getImageUrl())
       .nickName(oAuth2UserInfo.getName())
       .roles("ROLE_GUEST")
-      .provider(authProvider)
+      .provider(AuthProvider.valueOf(String.valueOf(authProvider.toString())))
       .build();
     return memberRepository.save(member);
   }
