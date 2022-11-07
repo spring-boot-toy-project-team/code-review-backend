@@ -7,9 +7,7 @@ import com.codereview.member.repository.MemberRepository;
 import com.codereview.security.MemberDetails;
 import com.codereview.security.oauth.info.OAuth2UserInfo;
 import com.codereview.security.oauth.info.OAuth2UserInfoFactory;
-import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
-import org.elasticsearch.monitor.os.OsStats;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -40,9 +38,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
   }
 
   private OAuth2User processOAuth2User(OAuth2UserRequest oAuth2UserRequest, OAuth2User oAuth2User){
-    AuthProvider authProvider = AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId());
-    OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOauth2UserInfo(oAuth2UserRequest.getClientRegistration().getRegistrationId(),
-      oAuth2User.getAttributes());
+    AuthProvider authProvider = AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId().toLowerCase());
+    OAuth2UserInfo oAuth2UserInfo = OAuth2UserInfoFactory.getOauth2UserInfo(authProvider, oAuth2User.getAttributes());
 
     if (oAuth2UserInfo.getEmail().isEmpty())
       throw new OAuth2AuthenticationProcessingException("Empty Email");
@@ -51,7 +48,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     Member member;
     if (memberOptional.isPresent()){
       member = memberOptional.get();
-      if (!authProvider.equals(member.getProvider())) {
+      if (authProvider != member.getProvider()) {
         throw new OAuth2AuthenticationProcessingException("Already SignUp Other Provider");
       }
       member = updateMember(member, authProvider);
@@ -65,14 +62,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     Member member = Member.builder()
       .email(oAuth2UserInfo.getEmail())
       .profileImg(oAuth2UserInfo.getImageUrl())
+      .nickName(oAuth2UserInfo.getName())
       .roles("ROLE_GUEST")
-      .provider(authProvider.name())
+      .provider(authProvider)
       .build();
     return memberRepository.save(member);
   }
 
   private Member updateMember(Member member, AuthProvider authProvider){
-    member.setProvider(authProvider.name());
+    member.setProvider(authProvider);
     member.setEmail(member.getEmail());
     member.setProfileImg(member.getProfileImg());
     return memberRepository.save(member);
