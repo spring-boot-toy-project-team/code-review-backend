@@ -4,7 +4,7 @@ import com.codereview.common.exception.OAuth2AuthenticationProcessingException;
 import com.codereview.member.entity.AuthProvider;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
-import com.codereview.security.MemberDetails;
+import com.codereview.security.CustomUserDetails;
 import com.codereview.security.oauth.info.OAuth2UserInfo;
 import com.codereview.security.oauth.info.OAuth2UserInfoFactory;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }else {
       member = createMember(oAuth2UserInfo, authProvider);
     }
-    return MemberDetails.create(member,oAuth2User.getAttributes());
+    return CustomUserDetails.create(member,oAuth2User.getAttributes());
   }
 
   private Member createMember( OAuth2UserInfo oAuth2UserInfo, AuthProvider authProvider){

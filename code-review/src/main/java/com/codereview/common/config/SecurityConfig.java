@@ -1,6 +1,6 @@
 package com.codereview.common.config;
 
-import com.codereview.security.MemberDetailsService;
+import com.codereview.security.CustomUserDetailsService;
 import com.codereview.security.RestAuthenticationEntryPoint;
 import com.codereview.security.jwt.JwtAccessDeniedHandler;
 import com.codereview.security.jwt.JwtAuthenticationEntryPoint;
@@ -41,7 +41,7 @@ public class SecurityConfig{
   private final CustomOAuth2UserService customOAuth2UserService;
   private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
   private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-  private final MemberDetailsService memberDetailsService;
+  private final CustomUserDetailsService customUserDetailsService;
   private final CorsFilter corsFilter;
 
   @Bean
@@ -57,7 +57,7 @@ public class SecurityConfig{
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
     AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-    authenticationManagerBuilder.userDetailsService(memberDetailsService).passwordEncoder(passwordEncoder());
+    authenticationManagerBuilder.userDetailsService(customUserDetailsService).passwordEncoder(passwordEncoder());
     AuthenticationManager authenticationManager = authenticationManagerBuilder.build();
 
     http.cors()

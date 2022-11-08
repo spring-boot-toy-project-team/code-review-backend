@@ -13,29 +13,29 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
-public class MemberDetails implements UserDetails, OAuth2User {
+public class CustomUserDetails implements UserDetails, OAuth2User {
   private long memberId;
   private String nickName;
   private String email;
   private List<String> roles;
   private Map<String, Object> attributes;
 
-  public MemberDetails(long memberId, String nickName, String email, List<String> roleList) {
+  public CustomUserDetails(long memberId, String nickName, String email, List<String> roleList) {
     this.memberId = memberId;
     this.nickName = nickName;
     this.email = email;
     this.roles = roleList;
   }
 
-  public static MemberDetails create(Member member){
-    return new MemberDetails(member.getMemberId(), member.getNickName(), member.getEmail(), member.getRoleList());
+  public static CustomUserDetails create(Member member){
+    return new CustomUserDetails(member.getMemberId(), member.getNickName(), member.getEmail(), member.getRoleList());
   }
 
-  public static MemberDetails create(Member member, Map<String, Object> attributes) {
+  public static CustomUserDetails create(Member member, Map<String, Object> attributes) {
 
-    MemberDetails memberDetails = new MemberDetails(member.getMemberId(), member.getNickName(),member.getEmail(), member.getRoleList());
-    memberDetails.setAttributes(attributes);
-    return memberDetails;
+    CustomUserDetails customUserDetails = new CustomUserDetails(member.getMemberId(), member.getNickName(),member.getEmail(), member.getRoleList());
+    customUserDetails.setAttributes(attributes);
+    return customUserDetails;
   }
 
   private void setAttributes(Map<String, Object> attributes) {

@@ -1,9 +1,8 @@
 package com.codereview.security.oauth.info;
 
 import com.codereview.common.config.AppProperties;
-import com.codereview.common.dto.token.TokenResponseDto;
 import com.codereview.common.exception.BadRequestException;
-import com.codereview.security.MemberDetails;
+import com.codereview.security.CustomUserDetails;
 import com.codereview.security.jwt.JwtTokenProvider;
 import com.codereview.security.oauth.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.codereview.util.CookieUtils;
@@ -52,8 +51,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         
         String targetUri = redirectUri.orElse(getDefaultTargetUrl());
-        MemberDetails memberDetails = (MemberDetails) authentication.getPrincipal();
-        jwtTokenProvider.createTokenDto(memberDetails.getMember(), response);
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        jwtTokenProvider.createTokenDto(customUserDetails.getMember(), response);
         return UriComponentsBuilder.fromUriString(targetUri)
                 .build().toUriString();
     }
