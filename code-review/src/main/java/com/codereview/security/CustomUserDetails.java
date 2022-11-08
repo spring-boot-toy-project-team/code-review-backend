@@ -21,10 +21,6 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
     this.member = member;
   }
 
-  public static CustomUserDetails create(Member member){
-    return new CustomUserDetails(member);
-  }
-
   public static CustomUserDetails create(Member member, Map<String, Object> attributes) {
 
     CustomUserDetails customUserDetails = new CustomUserDetails(member);
@@ -88,7 +84,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
   }
 
   public String getRole(){
-    return String.join(",", member.getRoles());
+    return this.member.getRoles();
   }
 
   public Member getMember() {
