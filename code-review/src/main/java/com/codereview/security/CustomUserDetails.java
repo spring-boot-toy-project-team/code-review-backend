@@ -96,8 +96,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
             .email(this.member.getEmail())
             .memberId(this.member.getMemberId())
             .nickName(this.member.getNickName())
-            .roles(getRole())
+            .roles(this.member.getRoles())
             .build();
   }
-
 }
