@@ -8,32 +8,26 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
 public class CustomUserDetails implements UserDetails, OAuth2User {
-  private long memberId;
-  private String nickName;
-  private String email;
-  private List<String> roles;
+
+  private Member member;
   private Map<String, Object> attributes;
 
-  public CustomUserDetails(long memberId, String nickName, String email, List<String> roleList) {
-    this.memberId = memberId;
-    this.nickName = nickName;
-    this.email = email;
-    this.roles = roleList;
+  public CustomUserDetails(Member member) {
+    this.member = member;
   }
 
   public static CustomUserDetails create(Member member){
-    return new CustomUserDetails(member.getMemberId(), member.getNickName(), member.getEmail(), member.getRoleList());
+    return new CustomUserDetails(member);
   }
 
   public static CustomUserDetails create(Member member, Map<String, Object> attributes) {
 
-    CustomUserDetails customUserDetails = new CustomUserDetails(member.getMemberId(), member.getNickName(),member.getEmail(), member.getRoleList());
+    CustomUserDetails customUserDetails = new CustomUserDetails(member);
     customUserDetails.setAttributes(attributes);
     return customUserDetails;
   }
@@ -44,7 +38,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
 
   public Long getId() {
-    return this.memberId;
+    return this.member.getMemberId();
   }
 
   @Override
@@ -54,7 +48,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return roles.stream().map(SimpleGrantedAuthority::new)
+    return member.getRoleList().stream().map(SimpleGrantedAuthority::new)
             .collect(Collectors.toList());
   }
 
@@ -65,7 +59,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
   @Override
   public String getUsername() {
-    return this.email;
+    return this.member.getNickName();
   }
 
   @Override
@@ -90,19 +84,11 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
   @Override
   public String getName() {
-    return this.nickName;
+    return this.member.getNickName();
   }
 
   public String getRole(){
-    return String.join(",", roles);
+    return String.join(",", member.getRoles());
   }
 
-  public Member getMember() {
-    return Member.builder()
-            .email(this.email)
-            .memberId(this.memberId)
-            .nickName(this.nickName)
-            .roles(getRole())
-            .build();
-  }
 }
