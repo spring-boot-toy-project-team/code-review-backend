@@ -91,4 +91,13 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
     return String.join(",", member.getRoles());
   }
 
+  public Member getMember() {
+    return Member.builder()
+            .email(this.member.getEmail())
+            .memberId(this.member.getMemberId())
+            .nickName(this.member.getNickName())
+            .roles(getRole())
+            .build();
+  }
+
 }
