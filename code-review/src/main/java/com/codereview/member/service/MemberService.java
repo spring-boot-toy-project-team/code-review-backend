@@ -24,12 +24,11 @@ public class MemberService {
   private final MemberMapper mapper;
   private final PasswordEncoder passwordEncoder;
 
-  @Transactional(rollbackFor = BusinessLogicException.class)
   public Member createMember(Member member) {
+    verifyEmail(member.getEmail());
     member.setPassword(passwordEncoder.encode(member.getPassword()));
     member.setRoles("ROLE_USER");
     member.setProvider(AuthProvider.local);
-    verifyEmail(member.getEmail());
     return memberRepository.save(member);
   }
 
@@ -52,8 +51,9 @@ public class MemberService {
   }
 
   public void verifyEmail(String email) {
-    memberRepository.findByEmail(email)
-      .ifPresent((member) -> new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_EXISTS));
+    Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    if(optionalMember.isPresent())
+      throw new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_EXISTS);
   }
 
   @Transactional(readOnly = true)

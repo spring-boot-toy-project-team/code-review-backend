@@ -2,6 +2,7 @@ package com.codereview.member.entity;
 
 import com.codereview.common.audit.Auditable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -57,6 +58,7 @@ public class Member extends Auditable {
     this.skills = skills;
   }
 
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   public List<String> getRoleList() {
     if(this.roles.length() > 0)
       return Arrays.asList(this.roles.split(","));

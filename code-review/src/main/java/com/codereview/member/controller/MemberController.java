@@ -4,7 +4,7 @@ import com.codereview.common.dto.response.SingleResponseWithMessageDto;
 import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;
 import com.codereview.member.service.MemberService;
-import com.codereview.security.MemberDetails;
+import com.codereview.security.CustomUserDetails;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +21,8 @@ public class MemberController {
   private final MemberMapper mapper;
 
   @GetMapping("/info")
-  public ResponseEntity getMember(@AuthenticationPrincipal MemberDetails memberDetails) {
-    Member member = memberService.findMember(memberDetails.getMemberId());
+  public ResponseEntity getMember(@AuthenticationPrincipal CustomUserDetails customUserDetails) {
+    Member member = memberService.findMember(customUserDetails.getMember().getMemberId());
 
     return new ResponseEntity<>(new SingleResponseWithMessageDto<>(mapper.memberToMemberInfo(member),
       "SUCCESS"),
