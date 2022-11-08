@@ -1,5 +1,6 @@
 package com.codereview.security.jwt;
 
+import com.codereview.common.dto.token.TokenResponseDto;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.member.entity.Member;
@@ -79,6 +80,7 @@ public class JwtTokenProvider {
 
     response.addHeader("Authorization", GRANT_TYPE + accessToken);
     response.addHeader("Set-Cookie",responseCookie.toString());
+
   }
 
   /**

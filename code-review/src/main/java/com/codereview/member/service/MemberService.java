@@ -3,6 +3,7 @@ package com.codereview.member.service;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.member.dto.MemberResponseDto;
+import com.codereview.member.entity.AuthProvider;
 import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;
 import com.codereview.member.repository.MemberRepository;
@@ -22,11 +23,12 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final MemberMapper mapper;
   private final PasswordEncoder passwordEncoder;
+
   @Transactional(rollbackFor = BusinessLogicException.class)
   public Member createMember(Member member) {
     member.setPassword(passwordEncoder.encode(member.getPassword()));
     member.setRoles("ROLE_USER");
-    member.setProvider("local");
+    member.setProvider(AuthProvider.local);
     verifyEmail(member.getEmail());
     return memberRepository.save(member);
   }

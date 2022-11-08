@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class MemberDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
   private final MemberRepository memberRepository;
 
   @Override
@@ -21,6 +21,6 @@ public class MemberDetailsService implements UserDetailsService {
   @Cacheable(key = "#email", value = "loadUserByUsername")
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     Member member = memberRepository.findByEmail(email).orElse(null);
-    return MemberDetails.create(member);
+    return CustomUserDetails.create(member);
   }
 }

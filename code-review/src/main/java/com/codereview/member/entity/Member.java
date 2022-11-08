@@ -28,7 +28,8 @@ public class Member extends Auditable {
 
   private String roles;
 
-  private String provider;
+  @Enumerated(value = EnumType.STRING)
+  private AuthProvider provider;
 
   private String profileImg;
 
@@ -43,7 +44,7 @@ public class Member extends Auditable {
 
   @Builder
   public Member(Long memberId, String email, String nickName, String password, String roles,
-                   String provider, String profileImg, String githubUrl, String phone, Set<String> skills) {
+                   AuthProvider provider, String profileImg, String githubUrl, String phone, Set<String> skills) {
     this.memberId = memberId;
     this.email = email;
     this.nickName = nickName;

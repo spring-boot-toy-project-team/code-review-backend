@@ -10,6 +10,7 @@ import com.codereview.member.dto.MemberRequestDto;
 import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;
 import com.codereview.member.service.MemberService;
+import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,5 +63,14 @@ public class AuthController {
     return new ResponseEntity<>(MessageResponseDto.builder()
       .message("SUCCESS")
       .build(), HttpStatus.OK);
+  }
+
+  @GetMapping(value = "token")
+  public String token(@RequestParam String token, @RequestParam String error) {
+    if (StringUtils.isNotBlank(error)) {
+      return error;
+    } else {
+      return token;
+    }
   }
 }

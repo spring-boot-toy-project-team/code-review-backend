@@ -1,6 +1,6 @@
 package com.codereview.member.entity;
 
 public enum Roles {
-  ROLE_USER,
+  ROLE_GUEST,
   ROLE_ADMIN
 }
