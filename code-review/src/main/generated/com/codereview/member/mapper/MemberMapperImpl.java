@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-10-30T22:53:51+0900",
-    comments = "version: 1.5.2.Final, compiler: javac, environment: Java 11.0.13 (Oracle Corporation)"
+    date = "2022-11-08T20:23:30+0900",
+    comments = "version: 1.5.3.Final, compiler: javac, environment: Java 11.0.13 (Oracle Corporation)"
 )
 @Component
 public class MemberMapperImpl implements MemberMapper {
 
     @Override
-    public Member signUpDtoToMember(MemberRequestDto.singUpDto singUpDto) {
+    public Member signUpDtoToMember(MemberRequestDto.SingUpDto singUpDto) {
         if ( singUpDto == null ) {
             return null;
         }
@@ -27,13 +27,12 @@ public class MemberMapperImpl implements MemberMapper {
         member.email( singUpDto.getEmail() );
         member.nickName( singUpDto.getNickName() );
         member.password( singUpDto.getPassword() );
-        member.provider( singUpDto.getProvider() );
 
         return member.build();
     }
 
     @Override
-    public Member loginDtoToMember(MemberRequestDto.loginDto loginDto) {
+    public Member loginDtoToMember(MemberRequestDto.LoginDto loginDto) {
         if ( loginDto == null ) {
             return null;
         }
@@ -66,7 +65,7 @@ public class MemberMapperImpl implements MemberMapper {
     }
 
     @Override
-    public Member updateDtoToMember(MemberRequestDto.updateDto updateDto) {
+    public Member updateDtoToMember(MemberRequestDto.UpdateDto updateDto) {
         if ( updateDto == null ) {
             return null;
         }

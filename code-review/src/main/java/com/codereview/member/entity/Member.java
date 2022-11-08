@@ -2,6 +2,7 @@ package com.codereview.member.entity;
 
 import com.codereview.common.audit.Auditable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,7 +29,8 @@ public class Member extends Auditable {
 
   private String roles;
 
-  private String provider;
+  @Enumerated(value = EnumType.STRING)
+  private AuthProvider provider;
 
   private String profileImg;
 
@@ -43,7 +45,7 @@ public class Member extends Auditable {
 
   @Builder
   public Member(Long memberId, String email, String nickName, String password, String roles,
-                   String provider, String profileImg, String githubUrl, String phone, Set<String> skills) {
+                   AuthProvider provider, String profileImg, String githubUrl, String phone, Set<String> skills) {
     this.memberId = memberId;
     this.email = email;
     this.nickName = nickName;
@@ -56,6 +58,7 @@ public class Member extends Auditable {
     this.skills = skills;
   }
 
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   public List<String> getRoleList() {
     if(this.roles.length() > 0)
       return Arrays.asList(this.roles.split(","));

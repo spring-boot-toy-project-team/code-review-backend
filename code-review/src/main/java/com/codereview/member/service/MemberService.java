@@ -3,6 +3,7 @@ package com.codereview.member.service;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.member.dto.MemberResponseDto;
+import com.codereview.member.entity.AuthProvider;
 import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;
 import com.codereview.member.repository.MemberRepository;
@@ -22,12 +23,12 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final MemberMapper mapper;
   private final PasswordEncoder passwordEncoder;
-  @Transactional(rollbackFor = BusinessLogicException.class)
+
   public Member createMember(Member member) {
+    verifyEmail(member.getEmail());
     member.setPassword(passwordEncoder.encode(member.getPassword()));
     member.setRoles("ROLE_USER");
-    member.setProvider("local");
-    verifyEmail(member.getEmail());
+    member.setProvider(AuthProvider.local);
     return memberRepository.save(member);
   }
 
@@ -50,8 +51,9 @@ public class MemberService {
   }
 
   public void verifyEmail(String email) {
-    memberRepository.findByEmail(email)
-      .ifPresent((member) -> new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_EXISTS));
+    Optional<Member> optionalMember = memberRepository.findByEmail(email);
+    if(optionalMember.isPresent())
+      throw new BusinessLogicException(ExceptionCode.MEMBER_ALREADY_EXISTS);
   }
 
   @Transactional(readOnly = true)
