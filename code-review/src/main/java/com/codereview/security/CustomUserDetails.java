@@ -59,7 +59,7 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
   @Override
   public String getUsername() {
-    return this.member.getNickName();
+    return this.member.getEmail();
   }
 
   @Override
