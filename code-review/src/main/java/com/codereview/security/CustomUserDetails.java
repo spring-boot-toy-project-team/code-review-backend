@@ -2,6 +2,7 @@ package com.codereview.security;
 
 import com.codereview.member.entity.Member;
 import lombok.NoArgsConstructor;
+import org.elasticsearch.monitor.os.OsStats;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,10 @@ public class CustomUserDetails implements UserDetails, OAuth2User {
 
   public CustomUserDetails(Member member) {
     this.member = member;
+  }
+
+  public static CustomUserDetails create(Member member){
+    return new CustomUserDetails(member);
   }
 
   public static CustomUserDetails create(Member member, Map<String, Object> attributes) {
