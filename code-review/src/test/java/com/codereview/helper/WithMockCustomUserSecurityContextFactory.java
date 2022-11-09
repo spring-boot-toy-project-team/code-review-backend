@@ -1,9 +1,8 @@
-package com.project.QR.helper;
+package com.codereview.helper;
 
 
-import com.project.QR.member.entity.AuthProvider;
-import com.project.QR.member.entity.Member;
-import com.project.QR.security.MemberDetails;
+import com.codereview.member.entity.Member;
+import com.codereview.security.CustomUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -16,7 +15,7 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
   public SecurityContext createSecurityContext(WithMockCustomUser customUser) {
     SecurityContext context = SecurityContextHolder.createEmptyContext();
     Member member = getMember(customUser);
-    MemberDetails principal = MemberDetails.create(member);
+    CustomUserDetails principal = CustomUserDetails.create(member);
     Authentication auth =
       new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
     context.setAuthentication(auth);
@@ -24,13 +23,12 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
   }
 
   private Member getMember(WithMockCustomUser customUser) {
-    Member member = new Member();
-    member.setMemberId(customUser.memberId());
-    member.setEmail(customUser.email());
-    member.setPassword(customUser.password());
-    member.setName(customUser.name());
-    member.setProvider(AuthProvider.valueOf(customUser.provider()));
-    member.setRole(customUser.role());
-    return member;
+    return Member.builder()
+      .email(customUser.email())
+      .password(customUser.password())
+      .nickName(customUser.nickName())
+      .roles(customUser.roles())
+      .provider(customUser.provider())
+      .build();
   }
 }
