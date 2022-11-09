@@ -3,18 +3,13 @@ package com.codereview.auth.controller;
 
 import com.codereview.auth.service.AuthService;
 import com.codereview.common.dto.response.MessageResponseDto;
-import com.codereview.common.dto.response.SingleResponseWithMessageDto;
-import com.codereview.common.dto.token.TokenRequestDto;
-import com.codereview.common.dto.token.TokenResponseDto;
 import com.codereview.member.dto.MemberRequestDto;
-import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;
 import com.codereview.member.service.MemberService;
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
@@ -63,14 +58,5 @@ public class AuthController {
     return new ResponseEntity<>(MessageResponseDto.builder()
       .message("SUCCESS")
       .build(), HttpStatus.OK);
-  }
-
-  @GetMapping(value = "token")
-  public String token(@RequestParam String token, @RequestParam String error) {
-    if (StringUtils.isNotBlank(error)) {
-      return error;
-    } else {
-      return token;
-    }
   }
 }
