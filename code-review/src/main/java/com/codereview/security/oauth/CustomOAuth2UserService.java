@@ -49,9 +49,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     if (memberOptional.isPresent()){
       member = memberOptional.get();
       if (!authProvider.equals(member.getProvider())) {
-        throw new OAuth2AuthenticationProcessingException("Already SignUp Other Provider");
+        member = updateMember(member, authProvider);
       }
-      member = updateMember(member, authProvider);
     }else {
       member = createMember(oAuth2UserInfo, authProvider);
     }
@@ -71,8 +70,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
   private Member updateMember(Member member, AuthProvider authProvider){
     member.setProvider(authProvider);
-    member.setEmail(member.getEmail());
-    member.setProfileImg(member.getProfileImg());
     return memberRepository.save(member);
   }
 }
