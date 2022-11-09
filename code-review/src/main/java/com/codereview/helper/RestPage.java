@@ -1,4 +1,4 @@
-package com.project.QR.helper.page;
+package com.codereview.helper;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
