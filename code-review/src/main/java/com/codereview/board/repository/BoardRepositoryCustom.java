@@ -1,2 +1,9 @@
-package com.codereview.board.repository;public interface CustomBoardRepository {
+package com.codereview.board.repository;
+
+import com.codereview.board.entity.Board;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+public interface BoardRepositoryCustom {
+  Page<Board> findAllByMemberId(long memberId, Pageable pageable);
 }
