@@ -1,4 +1,4 @@
-package com.project.QR.util;
+package com.codereview.util;
 
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
