@@ -70,6 +70,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
   private Member updateMember(Member member, AuthProvider authProvider){
     member.setProvider(authProvider);
+    member.setRoles("ROLE_USER");
     return memberRepository.save(member);
   }
 }

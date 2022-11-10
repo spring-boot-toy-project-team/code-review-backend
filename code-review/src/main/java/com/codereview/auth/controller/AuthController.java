@@ -3,6 +3,7 @@ package com.codereview.auth.controller;
 
 import com.codereview.auth.service.AuthService;
 import com.codereview.common.dto.response.MessageResponseDto;
+import com.codereview.common.dto.response.SingleResponseDto;
 import com.codereview.common.dto.response.SingleResponseWithMessageDto;
 import com.codereview.common.dto.token.TokenRequestDto;
 import com.codereview.common.dto.token.TokenResponseDto;
@@ -65,6 +66,19 @@ public class AuthController {
       .build(), HttpStatus.OK);
   }
 
+  /**
+   * 이메일 인증
+   */
+  @GetMapping("/emailValidation")
+  public ResponseEntity<MessageResponseDto> emailValidation(@RequestBody String email, @RequestBody String code){
+
+    authService.verifiedEmail(email,code);
+
+    return new ResponseEntity<>(MessageResponseDto.builder()
+            .message("SUCCESS")
+            .build(), HttpStatus.OK);
+  }
+
   @GetMapping(value = "token")
   public String token(@RequestParam String token, @RequestParam String error) {
     if (StringUtils.isNotBlank(error)) {
@@ -73,4 +87,5 @@ public class AuthController {
       return token;
     }
   }
+
 }

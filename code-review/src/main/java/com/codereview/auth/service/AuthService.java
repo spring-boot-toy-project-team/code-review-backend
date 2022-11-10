@@ -1,15 +1,15 @@
 package com.codereview.auth.service;
 
-import com.codereview.common.dto.token.TokenRequestDto;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
+import com.codereview.member.entity.EmailVerified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
+import com.codereview.member.service.MemberService;
 import com.codereview.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +28,7 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final RedisTemplate<String, Object> redisTemplate;
   private final HttpServletResponse response;
+  private final MemberService memberService;
 
   /**
    * 로그인 메서드
@@ -70,5 +71,25 @@ public class AuthService {
   public Member findVerifiedMemberByEmail(String email) {
     Optional<Member> optionalMember = memberRepository.findByEmail(email);
     return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_INFO_INCORRECT));
+  }
+
+  /**
+   * 회원 탈퇴
+   */
+  public void deleteMember(long memberId){
+    memberRepository.deleteById(memberId);
+  }
+
+  /**
+   * 이메일 인증
+   */
+  public void verifiedEmail(String email, String code){
+    Member findMember = memberService.findMemberEmail(email);
+    if(!findMember.getVerifiedCode().equals(code)){
+      throw new BusinessLogicException(ExceptionCode.CODE_INCORRECT);
+    }
+    findMember.setEmailVerified(EmailVerified.Y);
+    findMember.setRoles("ROLE_USER");
+    memberRepository.save(findMember);
   }
 }

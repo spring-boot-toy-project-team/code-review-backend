@@ -38,6 +38,10 @@ public class Member extends Auditable {
 
   private String phone;
 
+  @Enumerated(value = EnumType.STRING)
+  private EmailVerified emailVerified;
+
+  private String verifiedCode;
 
   @ElementCollection
   @CollectionTable(joinColumns = @JoinColumn(name = "MEMBER_ID"))
