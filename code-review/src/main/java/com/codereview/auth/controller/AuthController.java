@@ -84,11 +84,11 @@ public class AuthController {
   /**
    * 이메일 인증
    */
-  @GetMapping("/emailValidation")
+  @GetMapping("/email-validation")
   public ResponseEntity<MessageResponseDto> emailValidation(@NotBlank @PathParam("email") String email,
                                                             @NotBlank @PathParam("code") String code){
 
-    authService.verifiedEmail(email, code);
+    authService.verifiedByEmail(email, code);
 
     return new ResponseEntity<>(MessageResponseDto.builder()
             .message("SUCCESS")
