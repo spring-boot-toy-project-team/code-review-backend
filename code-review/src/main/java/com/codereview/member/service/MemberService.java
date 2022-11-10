@@ -35,8 +35,13 @@ public class MemberService {
     member.setRoles("ROLE_GUEST");
     member.setProvider(AuthProvider.local);
     member.setEmailVerified(EmailVerified.N);
-    member.setVerifiedCode(UUID.randomUUID().toString());
-    Member savedMember = memberRepository.save(member);
+    return memberRepository.save(member);
+  }
+
+  public Member sendEmail(String email){
+    Member findMember = findVerifiedMemberByEmail(email);
+    findMember.setVerifiedCode(UUID.randomUUID().toString());
+    Member savedMember = memberRepository.save(findMember);
     publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
     return savedMember;
   }

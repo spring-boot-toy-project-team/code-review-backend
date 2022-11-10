@@ -18,7 +18,6 @@ public class SimpleEmailSendable implements EmailSendable {
         mailMessage.setTo(to);
         mailMessage.setText(message);
         mailMessage.setSubject(subject);
-        mailMessage.setFrom("Code Review" + mailMessage.getFrom());
         javaMailSender.send(mailMessage);
     }
 }

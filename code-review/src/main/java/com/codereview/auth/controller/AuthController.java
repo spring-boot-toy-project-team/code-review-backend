@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.websocket.server.PathParam;
 
 @RestController
 @RequestMapping("/auth")
@@ -67,12 +69,26 @@ public class AuthController {
   }
 
   /**
+   * 이메일 인증 요청
+   */
+  @GetMapping("/validation")
+  public ResponseEntity<MessageResponseDto> validation(@NotBlank @PathParam("email") String email){
+
+    authService.sendEmail(email);
+
+    return new ResponseEntity<>(MessageResponseDto.builder()
+            .message("Send Email")
+            .build(), HttpStatus.OK);
+  }
+
+  /**
    * 이메일 인증
    */
   @GetMapping("/emailValidation")
-  public ResponseEntity<MessageResponseDto> emailValidation(@RequestBody String email, @RequestBody String code){
+  public ResponseEntity<MessageResponseDto> emailValidation(@NotBlank @PathParam("email") String email,
+                                                            @NotBlank @PathParam("code") String code){
 
-    authService.verifiedEmail(email,code);
+    authService.verifiedEmail(email, code);
 
     return new ResponseEntity<>(MessageResponseDto.builder()
             .message("SUCCESS")

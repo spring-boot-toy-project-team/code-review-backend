@@ -3,6 +3,7 @@ package com.codereview.email;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
@@ -28,7 +29,7 @@ public class EmailConfiguration {
     @Value("${mail.smtp.starttls.enable}")
     private String tlsEnable;
 
-
+    @Primary
     @Bean
     public EmailSendable simpleEmailSendable() {
         return new SimpleEmailSendable(javaMailSender());

@@ -92,4 +92,15 @@ public class AuthService {
     findMember.setRoles("ROLE_USER");
     memberRepository.save(findMember);
   }
+
+  /**
+   * 이메일 인증 요청
+   */
+  public void sendEmail(String email){
+    Member findMember = memberService.findMemberEmail(email);
+    if(!findMember.getEmail().equals(email)){
+      throw new BusinessLogicException(ExceptionCode.EMAIL_INCORRECT);
+    }
+    memberService.sendEmail(email);
+  }
 }

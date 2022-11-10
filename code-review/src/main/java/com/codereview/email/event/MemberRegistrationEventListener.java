@@ -34,7 +34,8 @@ public class MemberRegistrationEventListener {
     public void listen(MemberRegistrationApplicationEvent event) throws Exception {
         try {
             String[] to = new String[]{event.getMember().getEmail()};
-            String message = event.getMember().getEmail() + "님, 회원 가입이 성공적으로 완료되었습니다. " + "인증 코드" + event.getMember().getVerifiedCode();
+            String message = event.getMember().getEmail() + "님, 회원 가입이 성공적으로 완료되었습니다. " + "인증 코드" +
+                    event.getMember().getVerifiedCode();
             emailSender.sendEmail(to, subject, message);
         } catch (MailSendException e) {
             e.printStackTrace();
