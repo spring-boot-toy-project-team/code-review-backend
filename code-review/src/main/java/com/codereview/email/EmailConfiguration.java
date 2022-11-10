@@ -32,7 +32,7 @@ public class EmailConfiguration {
     @Primary
     @Bean
     public EmailSendable simpleEmailSendable() {
-        return new SimpleEmailSendable(javaMailSender());
+        return new TemplateEmailSender(javaMailSender());
     }
 
     @Bean

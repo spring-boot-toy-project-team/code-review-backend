@@ -20,6 +20,8 @@ public class MemberRegistrationEventListener {
     @Value("${mail.subject.member.registration}")
     private String subject;
 
+    @Value("${mail.redirect-url}")
+    private String redirectUrl;
 
     private final EmailSender emailSender;
     private final MemberService memberService;
@@ -34,8 +36,11 @@ public class MemberRegistrationEventListener {
     public void listen(MemberRegistrationApplicationEvent event) throws Exception {
         try {
             String[] to = new String[]{event.getMember().getEmail()};
-            String message = event.getMember().getEmail() + "님, 회원 가입이 성공적으로 완료되었습니다. " + "인증 코드" +
-                    event.getMember().getVerifiedCode();
+            String message = "<h1>" + event.getMember().getEmail() + "님, 회원 가입이 성공적으로 완료되었습니다</h1>.\n" +
+                    "<div>버튼을 누르면 이메일 인증이 완료됩니다 </div>" +
+                    "<div>" +
+                    "<a href=\"" + redirectUrl + "/email-validation?email=" + event.getMember().getEmail() + "&code=" + event.getMember().getVerifiedCode() +"\">" +
+                    "<button>click</button></a></div>";
             emailSender.sendEmail(to, subject, message);
         } catch (MailSendException e) {
             e.printStackTrace();
