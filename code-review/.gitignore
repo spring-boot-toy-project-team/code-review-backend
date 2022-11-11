@@ -40,6 +40,7 @@ out/
 application.yml
 application-app.yml
 application-oauth.yml
+application-mail.yml
 
 ### env $$$
 db/.env
