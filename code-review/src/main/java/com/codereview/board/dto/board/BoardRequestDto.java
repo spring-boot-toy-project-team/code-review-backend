@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 public class BoardRequestDto {
   @Data
@@ -15,7 +16,7 @@ public class BoardRequestDto {
   public static class CreateBoardDto {
     private String title;
     private String contents;
-    private List<String> tagList;
+    private Set<String> tagList;
     private long memberId;
   }
 
@@ -26,7 +27,7 @@ public class BoardRequestDto {
   public static class UpdateBoardDto {
     private String title;
     private String contents;
-    private List<String> tagList;
+    private Set<String> tagList;
     private long memberId;
     private long boardId;
   }

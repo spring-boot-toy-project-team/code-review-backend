@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 public class BoardResponseDto {
 
@@ -29,7 +30,7 @@ public class BoardResponseDto {
     private Long boardId;
     private String title;
     private String contents;
-    private List<String> tag;
+    private Set<String> tag;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
   }
