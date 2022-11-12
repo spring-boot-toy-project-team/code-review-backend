@@ -1,4 +1,4 @@
-package com.codereview.board.dto;
+package com.codereview.board.dto.board;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
