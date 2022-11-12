@@ -41,7 +41,7 @@ public class MemberRegistrationEventListener {
                     "<div>Code Review Community에 오신걸 환영합니다.</div>" +
                     "<div>" +
                     "<a href=\"" + redirectUrl + "/email-validation?email=" + event.getMember().getEmail() + "&code=" + event.getMember().getVerifiedCode() +"\">" +
-                    "<button type='button;\n" +
+                    "<'button;\n" +
                     " width: 180px;\n" +
                     " height: 50px;\n" +
                     " font-size: 25px;\n" +
