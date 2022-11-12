@@ -2,10 +2,12 @@ package com.codereview.board.service;
 
 
 import com.codereview.board.entity.Board;
-import com.codereview.board.repository.BoardRepository;
+import com.codereview.board.entity.BoardTag;
+import com.codereview.board.repository.board.BoardRepository;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.helper.RestPage;
+import com.codereview.tag.service.TagService;
 import com.codereview.util.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,15 +16,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class BoardService {
   private final BoardRepository boardRepository;
+  private final BoardTagService boardTagService;
   private final CustomBeanUtils<Board> beanUtils;
+  private final TagService tagService;
 
   /**
    * 게시판 조회
@@ -70,7 +76,13 @@ public class BoardService {
    * 게시글 저장
    */
   public Board createBoard(Board board) {
-    // TODO: TAG와 연관관계 매핑 할 것
+    // TODO: 리펙토링 가능해서 좀 더 다듬기 필요!, 추상화 수준 맞추기
+    board.setBoardTags(board.getBoardTags().stream()
+      .peek(boardTag -> {
+        boardTag.setBoard(board);
+        boardTag.setTag(tagService.findTagOrSave(boardTag.getTag()));
+      })
+      .collect(Collectors.toList()));
     return boardRepository.save(board);
   }
 
@@ -80,11 +92,22 @@ public class BoardService {
   public Board updateBoard(Board board) {
     // TODO: TAG와 연관관계 매핑 할 것
     Board findBoard = findVerifiedBoardWithMemberId(board.getBoardId(), board.getMember().getMemberId());
+
+    // 저장 및 유지
+    board.setBoardTags(board.getBoardTags().stream()
+        .map(boardTag -> {
+          boardTag.setBoard(board);
+          return boardTagService.updateBoardTag(boardTag);
+        })
+      .collect(Collectors.toList())
+    );
+    boardTagService.deleteOldBoardTag(board, findBoard);
     Board saveBoard = beanUtils.copyNonNullProperties(board, findBoard);
+
     return boardRepository.save(saveBoard);
   }
 
-  public void deleteBoard(long boardId, long memberId) {
+  public void deleteBoardByIdAndMemberId(long boardId, long memberId) {
     Board findBoard = findVerifiedBoardWithMemberId(boardId, memberId);
     boardRepository.delete(findBoard);
   }

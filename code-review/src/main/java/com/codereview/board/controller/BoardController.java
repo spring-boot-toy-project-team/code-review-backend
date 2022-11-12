@@ -20,7 +20,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.websocket.server.PathParam;
 import java.util.List;
-import static com.codereview.board.dto.BoardRequestDto.*;
+import static com.codereview.board.dto.board.BoardRequestDto.*;
 
 @Validated
 @RestController
@@ -69,7 +69,7 @@ public class BoardController {
     createBoardDto.setMemberId(customUserDetails.getMember().getMemberId());
     Board board = boardService.createBoard(mapper.createBoardDtoToBoard(createBoardDto));
 
-    return new ResponseEntity<>(new SingleResponseWithMessageDto(board,
+    return new ResponseEntity<>(new SingleResponseWithMessageDto(mapper.boardToBoardInfoDto(board),
       "SUCCESS"),
       HttpStatus.OK);
   }
@@ -98,7 +98,7 @@ public class BoardController {
   @DeleteMapping("/{board-id}")
   public ResponseEntity deleteBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                     @Positive @PathVariable("board-id") long boardId) {
-    boardService.deleteBoard(boardId, customUserDetails.getMember().getMemberId());
+    boardService.deleteBoardByIdAndMemberId(boardId, customUserDetails.getMember().getMemberId());
 
     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
   }
