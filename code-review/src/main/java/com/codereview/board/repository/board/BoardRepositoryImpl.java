@@ -1,4 +1,4 @@
-package com.codereview.board.repository;
+package com.codereview.board.repository.board;
 
 import com.codereview.board.entity.Board;
 import com.querydsl.jpa.impl.JPAQueryFactory;
