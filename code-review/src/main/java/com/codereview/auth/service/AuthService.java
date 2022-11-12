@@ -100,21 +100,23 @@ public class AuthService {
   /**
    * 이메일 인증 요청
    */
-  public void sendEmail(String email){
+  public Member sendEmail(String email){
     Member findMember = memberService.findMemberByEmail(email);
     if(!findMember.getEmail().equals(email)){
       throw new BusinessLogicException(ExceptionCode.EMAIL_INCORRECT);
     }
-    saveVerifiedMember(email);
-  }
-
-  @Transactional(readOnly = true)
-  public Member saveVerifiedMember(String email){
-    Member findMember = findVerifiedMemberByEmail(email);
     findMember.setVerifiedCode(UUID.randomUUID().toString());
     Member savedMember = memberRepository.save(findMember);
     publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
     return savedMember;
   }
+
+//  public Member saveVerifiedMember(String email){
+//    Member findMember = findVerifiedMemberByEmail(email);
+//    findMember.setVerifiedCode(UUID.randomUUID().toString());
+//    Member savedMember = memberRepository.save(findMember);
+//    publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
+//    return savedMember;
+//  }
 
 }
