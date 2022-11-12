@@ -78,13 +78,6 @@ public class AuthService {
   }
 
   /**
-   * 회원 탈퇴
-   */
-  public void deleteMember(long memberId){
-    memberRepository.deleteById(memberId);
-  }
-
-  /**
    * 이메일 인증
    */
   public void verifiedByEmail(String email, String code){
@@ -100,7 +93,7 @@ public class AuthService {
   /**
    * 이메일 인증 요청
    */
-  public Member sendEmail(String email){
+  public void sendEmail(String email){
     Member findMember = memberService.findMemberByEmail(email);
     if(!findMember.getEmail().equals(email)){
       throw new BusinessLogicException(ExceptionCode.EMAIL_INCORRECT);
@@ -108,15 +101,5 @@ public class AuthService {
     findMember.setVerifiedCode(UUID.randomUUID().toString());
     Member savedMember = memberRepository.save(findMember);
     publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
-    return savedMember;
   }
-
-//  public Member saveVerifiedMember(String email){
-//    Member findMember = findVerifiedMemberByEmail(email);
-//    findMember.setVerifiedCode(UUID.randomUUID().toString());
-//    Member savedMember = memberRepository.save(findMember);
-//    publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
-//    return savedMember;
-//  }
-
 }
