@@ -50,8 +50,8 @@ public class BoardTagService {
 
   /**
    * 기존의 BoardTag 업데이트
-   * @param newBoard 새로운 BoardTag
-   * @param oldBoard 기존의 BoardTag
+   * @param newBoard: 새로운 BoardTag
+   * @param oldBoard: 기존의 BoardTag
    */
   public void deleteOldBoardTag(Board newBoard, Board oldBoard) {
     List<String> newTag = getNameOfTagsFromBoard(newBoard);
