@@ -15,7 +15,9 @@ public enum ExceptionCode {
   TOKEN_IS_INVALID(401, "Token is invalid"),
   REFRESH_TOKEN_IS_EXPIRED(403, "Refresh Token is expired"),
   COOKIE_IS_NOT_EXISTS(404, "Cookie is not exists"),
-  AUTHORIZATION_IS_NOT_FOUND(403, "Authorization header not found");
+  AUTHORIZATION_IS_NOT_FOUND(403, "Authorization header not found"),
+  CODE_INCORRECT(404, "Code Incorrect"),
+  EMAIL_INCORRECT(404, "Email Incorrect");
 
   @Getter
   private int status;

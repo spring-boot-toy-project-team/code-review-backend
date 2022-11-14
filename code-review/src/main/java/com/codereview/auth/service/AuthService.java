@@ -1,15 +1,17 @@
 package com.codereview.auth.service;
 
-import com.codereview.common.dto.token.TokenRequestDto;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
+import com.codereview.email.event.MemberRegistrationApplicationEvent;
+import com.codereview.member.entity.EmailVerified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
+import com.codereview.member.service.MemberService;
 import com.codereview.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -28,6 +31,8 @@ public class AuthService {
   private final PasswordEncoder passwordEncoder;
   private final RedisTemplate<String, Object> redisTemplate;
   private final HttpServletResponse response;
+  private final MemberService memberService;
+  private final ApplicationEventPublisher publisher;
 
   /**
    * 로그인 메서드
@@ -70,5 +75,31 @@ public class AuthService {
   public Member findVerifiedMemberByEmail(String email) {
     Optional<Member> optionalMember = memberRepository.findByEmail(email);
     return optionalMember.orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_INFO_INCORRECT));
+  }
+
+  /**
+   * 이메일 인증
+   */
+  public void verifiedByEmail(String email, String code){
+    Member findMember = memberService.findMemberByEmail(email);
+    if(!findMember.getVerifiedCode().equals(code)){
+      throw new BusinessLogicException(ExceptionCode.CODE_INCORRECT);
+    }
+    findMember.setEmailVerified(EmailVerified.Y);
+    findMember.setRoles("ROLE_USER");
+    memberRepository.save(findMember);
+  }
+
+  /**
+   * 이메일 인증 요청
+   */
+  public void sendEmail(String email){
+    Member findMember = memberService.findMemberByEmail(email);
+    if(!findMember.getEmail().equals(email)){
+      throw new BusinessLogicException(ExceptionCode.EMAIL_INCORRECT);
+    }
+    findMember.setVerifiedCode(UUID.randomUUID().toString());
+    Member savedMember = memberRepository.save(findMember);
+    publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
   }
 }
