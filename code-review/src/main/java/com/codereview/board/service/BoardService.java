@@ -9,6 +9,8 @@ import com.codereview.helper.RestPage;
 import com.codereview.tag.service.TagService;
 import com.codereview.util.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,6 +32,7 @@ public class BoardService {
    * 게시판 조회
    */
   @Transactional(readOnly = true)
+  @Cacheable(key = "{#page, #size}", value = "getBoards")
   public RestPage<Board> getBoards(int page, int size) {
     return new RestPage<>(boardRepository.findAll(
       PageRequest.of(
@@ -71,6 +74,7 @@ public class BoardService {
   /**
    * 게시글 저장
    */
+  @CacheEvict(cacheNames = {"getBoards"}, allEntries = true)
   public Board createBoard(Board board) {
     boardTagService.createMultipleBoardTag(board);
     return boardRepository.save(board);
@@ -79,6 +83,7 @@ public class BoardService {
   /**
    * 게시글 변경
    */
+  @CacheEvict(cacheNames = {"getBoards"}, allEntries = true)
   public Board updateBoard(Board board) {
     Board findBoard = findVerifiedBoardWithMemberId(board.getBoardId(), board.getMember().getMemberId());
     boardTagService.updateMultipleBoardTag(board);
@@ -88,6 +93,7 @@ public class BoardService {
     return boardRepository.save(saveBoard);
   }
 
+  @CacheEvict(cacheNames = {"getBoards"}, allEntries = true)
   public void deleteBoardByIdAndMemberId(long boardId, long memberId) {
     Board findBoard = findVerifiedBoardWithMemberId(boardId, memberId);
     boardRepository.delete(findBoard);
