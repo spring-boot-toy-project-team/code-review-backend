@@ -71,7 +71,7 @@ public class BoardController {
 
     return new ResponseEntity<>(new SingleResponseWithMessageDto(mapper.boardToBoardInfoDto(board),
       "SUCCESS"),
-      HttpStatus.OK);
+      HttpStatus.CREATED);
   }
 
   /**
