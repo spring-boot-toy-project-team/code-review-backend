@@ -5,12 +5,14 @@ import com.codereview.board.controller.BoardController;
 import com.codereview.board.dto.board.BoardRequestDto;
 import com.codereview.board.dto.board.BoardResponseDto;
 import com.codereview.board.entity.Board;
+import com.codereview.board.entity.BoardTag;
 import com.codereview.board.mapper.BoardMapper;
 import com.codereview.board.service.BoardService;
+import com.codereview.helper.RestPage;
 import com.codereview.helper.WithMockCustomUser;
 import com.codereview.security.jwt.JwtTokenProvider;
 import com.codereview.stub.BoardStubData;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.codereview.stub.BoardTagStubData;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,11 +33,13 @@ import java.util.List;
 import static com.codereview.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.codereview.util.ApiDocumentUtils.getResponsePreProcessor;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,84 +63,115 @@ public class BoardControllerTest {
   @Autowired
   private Gson gson;
 
-//  /**
-//   * 게시판 리스트 조회
-//   */
-//  @GetMapping
-//  public ResponseEntity<MultiResponseWithPageInfoDto> getBoards(@Positive @PathParam("page") int page,
-//                                                                @Positive @PathParam("size") int size) {
-//    RestPage<Board> boardRestPage = boardService.getBoards(page -1, size);
-//    List<Board> boardList = boardRestPage.getContent();
-//    return new ResponseEntity<>(new MultiResponseWithPageInfoDto<>(
-//      mapper.boardListToBoardDtoList(boardList),
-//      boardRestPage),
-//      HttpStatus.OK);
-//  }
+
 //
 //  /**
 //   * 게시판 검색
 //   */
 //
-//  /**
-//   * 게시글 조회
-//   */
-//  @GetMapping("/{board-id}")
-//  public ResponseEntity<SingleResponseWithMessageDto> getBoard(@Positive @PathVariable("board-id") long boardId) {
-//    Board board = boardService.getBoard(boardId);
-//    return new ResponseEntity<>(new SingleResponseWithMessageDto(mapper.boardToBoardInfoDto(board),
-//      "SUCCESS"),
-//      HttpStatus.OK);
-//  }
-//
 
-//
-//  /**
-//   * 게시글 변경
-//   */
-//  @PreAuthorize("isAuthenticated() and hasRole('ROLE_USER')")
-//  @PatchMapping("/{board-id}")
-//  public ResponseEntity<SingleResponseWithMessageDto> updateBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-//                                                                  @Positive @PathVariable("board-id") long boardId,
-//                                                                  @Valid @RequestBody BoardRequestDto.UpdateBoardDto updateBoardDto) {
-//    updateBoardDto.setBoardId(boardId);
-//    updateBoardDto.setMemberId(customUserDetails.getMember().getMemberId());
-//    Board board = boardService.updateBoard(mapper.updateBoardToBoard(updateBoardDto));
-//
-//    return new ResponseEntity<>(new SingleResponseWithMessageDto(mapper.boardToBoardInfoDto(board),
-//      "SUCCESS"),
-//      HttpStatus.OK);
-//  }
-//
-//  /**
-//   * 게시글 삭제
-//   */
-//  @PreAuthorize("isAuthenticated() and hasRole('ROLE_USER')")
-//  @DeleteMapping("/{board-id}")
-//  public ResponseEntity deleteBoard(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-//                                    @Positive @PathVariable("board-id") long boardId) {
-//    boardService.deleteBoardByIdAndMemberId(boardId, customUserDetails.getMember().getMemberId());
-//
-//    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//  }
-//
-//  /**
-//   * 내가 쓴 게시글 조회
-//   */
-//  @PreAuthorize("isAuthenticated() and hasRole('ROLE_USER')")
-//  @GetMapping("/me")
-//  public ResponseEntity<MultiResponseWithPageInfoDto> getMyBoards(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-//                                                                  @Positive @PathParam("page") int page,
-//                                                                  @Positive @PathParam("size") int size) {
-//    Page<Board> boardRestPage
-//      = boardService.getMyBoards(customUserDetails.getMember().getMemberId(), page - 1, size);
-//    List<Board> boardList = boardRestPage.getContent();
-//
-//    return new ResponseEntity(new MultiResponseWithPageInfoDto<>(mapper.boardListToBoardDtoList(boardList),
-//      boardRestPage),
-//      HttpStatus.OK);
-//  }
   @Test
-  @DisplayName("게시판 등록 테스트")
+  @DisplayName("게시판 조회 테스트")
+  public void getBoards() throws Exception {
+    // given
+    int page = 1, size = 10;
+    RestPage<Board> boardRestPage = BoardStubData.BoardRestPage(page - 1, size);
+    List<Board> boardList = boardRestPage.getContent();
+    List<BoardResponseDto.BoardDto> boardDtoList = BoardStubData.BoardListToBoardInfoDtoList(boardList);
+
+
+    given(boardService.getBoards(Mockito.anyInt(), Mockito.anyInt())).willReturn(boardRestPage);
+    given(mapper.boardListToBoardDtoList(Mockito.anyList())).willReturn(boardDtoList);
+
+    // when
+    ResultActions actions = mockMvc.perform(
+      get("/boards?page={page}&size={size}", page, size)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+    );
+
+    // then
+    actions
+      .andExpect(status().isOk())
+      .andDo(
+        document(
+          "board-list-get",
+          getRequestPreProcessor(),
+          getResponsePreProcessor(),
+          requestParameters(
+            parameterWithName("page").description("페이지 수"),
+            parameterWithName("size").description("페이지 크기")
+          ),
+          responseFields(
+            List.of(
+              fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+              fieldWithPath("data[].boardId").type(JsonFieldType.NUMBER).description("게시글 식별자"),
+              fieldWithPath("data[].title").type(JsonFieldType.STRING).description("게시글 제목"),
+              fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("게시글 생성일자"),
+              fieldWithPath("data[].modifiedAt").type(JsonFieldType.STRING).description("게시글 변경일자"),
+              fieldWithPath("pageInfo").type(JsonFieldType.OBJECT).description("페이지 정보"),
+              fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지"),
+              fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("현재 페이지 크기"),
+              fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("총 데이터 수"),
+              fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
+            )
+          )
+        )
+      );
+  }
+
+  @Test
+  @DisplayName("게시글 조회")
+  public void getBoard() throws Exception {
+    // given
+    long boardId = 1L;
+    List<BoardTag> boardTagList = BoardTagStubData.boardTagList();
+    Board board = BoardStubData.board(boardId, "내용", "제목", boardTagList);
+    BoardResponseDto.BoardInfoDto boardInfoDto = BoardStubData.BoardToBoardInfoDto(board);
+
+    given(boardService.getBoard(Mockito.anyLong())).willReturn(board);
+    given(mapper.boardToBoardInfoDto(Mockito.any(Board.class))).willReturn(boardInfoDto);
+
+    // when
+    ResultActions actions = mockMvc.perform(
+      get("/boards/{board-id}", boardId)
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+    );
+
+    // then
+    actions
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.message").value("SUCCESS"))
+      .andExpect(jsonPath("$.data.boardId").value(boardInfoDto.getBoardId()))
+      .andExpect(jsonPath("$.data.title").value(boardInfoDto.getTitle()))
+      .andExpect(jsonPath("$.data.contents").value(boardInfoDto.getContents()))
+      .andDo(
+        document(
+          "board-get",
+          getRequestPreProcessor(),
+          getResponsePreProcessor(),
+          pathParameters(
+            parameterWithName("board-id").description("게시글 식별자")
+          ),
+          responseFields(
+            List.of(
+              fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+              fieldWithPath("data.boardId").type(JsonFieldType.NUMBER).description("게시글 식별자"),
+              fieldWithPath("data.title").type(JsonFieldType.STRING).description("게시글 제목"),
+              fieldWithPath("data.contents").type(JsonFieldType.STRING).description("게시글 내용"),
+              fieldWithPath("data.tag[]").type(JsonFieldType.ARRAY).description("게시글 태그"),
+              fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("게시글 생성일자"),
+              fieldWithPath("data.modifiedAt").type(JsonFieldType.STRING).description("게시글 변경일자"),
+              fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지")
+            )
+          )
+        )
+      );
+  }
+
+  @Test
+  @DisplayName("게시글 등록 테스트")
   @WithMockCustomUser
   public void createBoard() throws Exception {
     // given
@@ -154,18 +189,17 @@ public class BoardControllerTest {
       post("/boards")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .characterEncoding("utf-8")
         .header("Authorization", "Bearer {ACCESS_TOKEN}")
         .content(content)
     );
 
-    System.out.println(actions.andReturn().getRequest().getContentAsString());
-
     // then
     actions
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.data.message").value("SUCCESS"))
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.message").value("SUCCESS"))
       .andExpect(jsonPath("$.data.boardId").value(boardInfoDto.getBoardId()))
+      .andExpect(jsonPath("$.data.title").value(boardInfoDto.getTitle()))
+      .andExpect(jsonPath("$.data.contents").value(boardInfoDto.getContents()))
       .andDo(
         document(
           "board-create",
@@ -175,13 +209,170 @@ public class BoardControllerTest {
           requestFields(
             List.of(
               fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
-              fieldWithPath("contents").type(JsonFieldType.STRING).description("게시글 내용")
-
+              fieldWithPath("contents").type(JsonFieldType.STRING).description("게시글 내용"),
+              fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자").ignored(),
+              fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그")
             )
           ),
           responseFields(
             List.of(
+              fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+              fieldWithPath("data.boardId").type(JsonFieldType.NUMBER).description("게시글 식별자"),
+              fieldWithPath("data.title").type(JsonFieldType.STRING).description("게시글 제목"),
+              fieldWithPath("data.contents").type(JsonFieldType.STRING).description("게시글 내용"),
+              fieldWithPath("data.tag[]").type(JsonFieldType.ARRAY).description("게시글 태그"),
+              fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("게시글 생성일자"),
+              fieldWithPath("data.modifiedAt").type(JsonFieldType.STRING).description("게시글 변경일자"),
+              fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지")
+            )
+          )
+        )
+      );
+  }
 
+  @Test
+  @DisplayName("게시글 변경 테스트")
+  @WithMockCustomUser
+  public void updateBoardTest() throws Exception {
+    // given
+    long boardId = 1L;
+    BoardRequestDto.UpdateBoardDto updateBoardDto = BoardStubData.UpdateBoardDto(boardId);
+    Board board = BoardStubData.UpdateBoardDtoToBoard(updateBoardDto);
+    BoardResponseDto.BoardInfoDto boardInfoDto = BoardStubData.BoardToBoardInfoDto(board);
+    String content = gson.toJson(updateBoardDto);
+
+    given(mapper.updateBoardToBoard(Mockito.any(BoardRequestDto.UpdateBoardDto.class))).willReturn(new Board());
+    given(boardService.updateBoard(Mockito.any(Board.class))).willReturn(board);
+    given(mapper.boardToBoardInfoDto(Mockito.any(Board.class))).willReturn(boardInfoDto);
+
+    // when
+    ResultActions actions = mockMvc.perform(
+      patch("/boards/{board-id}", boardId)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer {ACCESS_TOKEN}")
+        .content(content)
+    );
+
+    // then
+    actions
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.message").value("SUCCESS"))
+      .andExpect(jsonPath("$.data.boardId").value(boardInfoDto.getBoardId()))
+      .andExpect(jsonPath("$.data.title").value(boardInfoDto.getTitle()))
+      .andExpect(jsonPath("$.data.contents").value(boardInfoDto.getContents()))
+      .andDo(
+        document(
+          "board-update",
+          getRequestPreProcessor(),
+          getResponsePreProcessor(),
+          requestHeaders(headerWithName("Authorization").description("Bearer AccessToken")),
+          pathParameters(
+            parameterWithName("board-id").description("게시글 식별자")
+          ),
+          requestFields(
+            List.of(
+              fieldWithPath("boardId").type(JsonFieldType.NUMBER).description("게시글 식별자").ignored(),
+              fieldWithPath("title").type(JsonFieldType.STRING).description("게시글 제목"),
+              fieldWithPath("contents").type(JsonFieldType.STRING).description("게시글 내용"),
+              fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자").ignored(),
+              fieldWithPath("tagList").type(JsonFieldType.ARRAY).description("태그")
+            )
+          ),
+          responseFields(
+            List.of(
+              fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+              fieldWithPath("data.boardId").type(JsonFieldType.NUMBER).description("게시글 식별자"),
+              fieldWithPath("data.title").type(JsonFieldType.STRING).description("게시글 제목"),
+              fieldWithPath("data.contents").type(JsonFieldType.STRING).description("게시글 내용"),
+              fieldWithPath("data.tag[]").type(JsonFieldType.ARRAY).description("게시글 태그"),
+              fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("게시글 생성일자"),
+              fieldWithPath("data.modifiedAt").type(JsonFieldType.STRING).description("게시글 변경일자"),
+              fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지")
+            )
+          )
+        )
+      );
+  }
+
+  @Test
+  @DisplayName("게시글 삭제 테스트")
+  @WithMockCustomUser
+  public void deleteBoardTest() throws Exception {
+    // given
+    long boardId = 1L;
+    doNothing().when(boardService).deleteBoardByIdAndMemberId(Mockito.anyLong(), Mockito.anyLong());
+
+    // when
+    ResultActions actions = mockMvc.perform(
+      delete("/boards/{board-id}", boardId)
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer {ACCESS_TOKEN}")
+    );
+
+    // then
+    actions
+      .andExpect(status().isNoContent())
+      .andDo(
+        document(
+          "board-delete",
+          getRequestPreProcessor(),
+          getResponsePreProcessor(),
+          requestHeaders(headerWithName("Authorization").description("Bearer AccessToken")),
+          pathParameters(
+            parameterWithName("board-id").description("게시글 식별자")
+          )
+        )
+      );
+  }
+
+  @Test
+  @DisplayName("내 게시글 조회")
+  @WithMockCustomUser
+  public void getMyBoards() throws Exception {
+    // given
+    int page = 1, size = 10;
+    RestPage<Board> boardRestPage = BoardStubData.BoardRestPage(page - 1, size);
+    List<Board> boardList = boardRestPage.getContent();
+    List<BoardResponseDto.BoardDto> boardDtoList = BoardStubData.BoardListToBoardInfoDtoList(boardList);
+
+    given(boardService.getMyBoards(Mockito.anyLong(), Mockito.anyInt(), Mockito.anyInt())).willReturn(boardRestPage);
+    given(mapper.boardListToBoardDtoList(Mockito.anyList())).willReturn(boardDtoList);
+
+    // when
+    ResultActions actions = mockMvc.perform(
+      get("/boards/me?page={page}&size={size}", page, size)
+        .contentType(MediaType.APPLICATION_JSON)
+        .accept(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer {ACCESS_TOKEN}")
+    );
+
+    // then
+    actions
+      .andExpect(status().isOk())
+      .andDo(
+        document(
+          "board-list-get",
+          getRequestPreProcessor(),
+          getResponsePreProcessor(),
+          requestHeaders(headerWithName("Authorization").description("Bearer AccessToken")),
+          requestParameters(
+            parameterWithName("page").description("페이지 수"),
+            parameterWithName("size").description("페이지 크기")
+          ),
+          responseFields(
+            List.of(
+              fieldWithPath("data").type(JsonFieldType.ARRAY).description("결과 데이터"),
+              fieldWithPath("data[].boardId").type(JsonFieldType.NUMBER).description("게시글 식별자"),
+              fieldWithPath("data[].title").type(JsonFieldType.STRING).description("게시글 제목"),
+              fieldWithPath("data[].createdAt").type(JsonFieldType.STRING).description("게시글 생성일자"),
+              fieldWithPath("data[].modifiedAt").type(JsonFieldType.STRING).description("게시글 변경일자"),
+              fieldWithPath("pageInfo").type(JsonFieldType.OBJECT).description("페이지 정보"),
+              fieldWithPath("pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지"),
+              fieldWithPath("pageInfo.size").type(JsonFieldType.NUMBER).description("현재 페이지 크기"),
+              fieldWithPath("pageInfo.totalElements").type(JsonFieldType.NUMBER).description("총 데이터 수"),
+              fieldWithPath("pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수")
             )
           )
         )
