@@ -9,6 +9,9 @@ import com.codereview.helper.RestPage;
 import com.codereview.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,9 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import javax.websocket.server.PathParam;
 import java.util.List;
-import static com.codereview.board.dto.board.BoardRequestDto.*;
+
+import static com.codereview.board.dto.board.BoardRequestDto.CreateBoardDto;
+import static com.codereview.board.dto.board.BoardRequestDto.UpdateBoardDto;
 
 @Validated
 @RestController
@@ -34,9 +38,9 @@ public class BoardController {
    * 게시판 리스트 조회
    */
   @GetMapping
-  public ResponseEntity<MultiResponseWithPageInfoDto> getBoards(@Positive @PathParam("page") int page,
-                                                                @Positive @PathParam("size") int size) {
-    RestPage<Board> boardRestPage = boardService.getBoards(page -1, size);
+  public ResponseEntity<MultiResponseWithPageInfoDto> getBoards(
+    @PageableDefault(size = 10, sort = "boardId", direction = Sort.Direction.DESC) Pageable pageable) {
+    RestPage<Board> boardRestPage = boardService.getBoards(pageable);
     List<Board> boardList = boardRestPage.getContent();
     return new ResponseEntity<>(new MultiResponseWithPageInfoDto<>(
       mapper.boardListToBoardDtoList(boardList),
@@ -109,10 +113,11 @@ public class BoardController {
   @PreAuthorize("isAuthenticated() and hasRole('ROLE_USER')")
   @GetMapping("/me")
   public ResponseEntity<MultiResponseWithPageInfoDto> getMyBoards(@AuthenticationPrincipal CustomUserDetails customUserDetails,
-                                                                  @Positive @PathParam("page") int page,
-                                                                  @Positive @PathParam("size") int size) {
+                                                                  @PageableDefault(size = 10,
+                                                                    sort = "boardId",
+                                                                    direction = Sort.Direction.DESC) Pageable pageable) {
     Page<Board> boardRestPage
-      = boardService.getMyBoards(customUserDetails.getMember().getMemberId(), page - 1, size);
+      = boardService.getMyBoards(customUserDetails.getMember().getMemberId(), pageable);
     List<Board> boardList = boardRestPage.getContent();
 
     return new ResponseEntity(new MultiResponseWithPageInfoDto<>(mapper.boardListToBoardDtoList(boardList),

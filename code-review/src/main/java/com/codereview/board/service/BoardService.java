@@ -6,13 +6,13 @@ import com.codereview.board.repository.board.BoardRepository;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.helper.RestPage;
-import com.codereview.tag.service.TagService;
 import com.codereview.util.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,20 +26,15 @@ public class BoardService {
   private final BoardRepository boardRepository;
   private final BoardTagService boardTagService;
   private final CustomBeanUtils<Board> beanUtils;
-  private final TagService tagService;
 
   /**
    * 게시판 조회
    */
   @Transactional(readOnly = true)
   @Cacheable(key = "{#page, #size}", value = "getBoards")
-  public RestPage<Board> getBoards(int page, int size) {
+  public RestPage<Board> getBoards(Pageable pageable) {
     return new RestPage<>(boardRepository.findAll(
-      PageRequest.of(
-        page,
-        size,
-        Sort.by("boardId").descending()
-      )
+      pageable
     ));
   }
 
@@ -99,7 +94,7 @@ public class BoardService {
     boardRepository.delete(findBoard);
   }
 
-  public Page<Board> getMyBoards(Long memberId, int page, int size) {
-    return boardRepository.findAllByMemberId(memberId, PageRequest.of(page, size, Sort.by("boardId").descending()));
+  public Page<Board> getMyBoards(Long memberId, Pageable pageable) {
+    return boardRepository.findAllByMemberId(memberId, pageable);
   }
 }
