@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.servlet.http.Cookie;
 import java.util.List;
+import java.util.UUID;
 
 import static com.codereview.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.codereview.util.ApiDocumentUtils.getResponsePreProcessor;
@@ -36,6 +37,8 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -183,5 +186,77 @@ public class AuthControllerTest {
           )
         )
       );
+  }
+
+  @Test
+  @DisplayName("이메일 인증 요청")
+  void validation() throws Exception {
+    //given
+    Member member = MemberStubData.guestMember();
+    String email = member.getEmail();
+
+    doNothing().when(authService).sendEmail(Mockito.anyString());
+
+    //when
+    ResultActions actions = mockMvc.perform(
+            get("/auth/validation?email={email}",email)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+    );
+
+    //then
+    actions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Send Email"))
+            .andDo(
+              document("SendEmail",
+                getRequestPreProcessor(),
+                getResponsePreProcessor(),
+                requestParameters(
+                        parameterWithName("email").description("이메일")
+                ),
+                responseFields(
+                        List.of(
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"))
+                )
+              )
+            );
+  }
+
+  @Test
+  @DisplayName("이메일 인증")
+  void emailValidation() throws Exception {
+    //given
+    Member member = MemberStubData.guestMember();
+    String email = member.getEmail();
+    String code = UUID.randomUUID().toString();
+
+    doNothing().when(authService).verifiedByEmail(email,code);
+
+    //when
+    ResultActions actions = mockMvc.perform(
+            get("/auth/email-validation?email={email}&code={code}",email,code)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON)
+    );
+
+    //then
+    actions
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("SUCCESS"))
+            .andDo(
+                    document("validation",
+                            getRequestPreProcessor(),
+                            getResponsePreProcessor(),
+                            requestParameters(
+                                    parameterWithName("email").description("이메일"),
+                                    parameterWithName("code").description("인증 코드")
+                            ),
+                            responseFields(
+                                    List.of(
+                                            fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"))
+                            )
+                    )
+            );
   }
 }
