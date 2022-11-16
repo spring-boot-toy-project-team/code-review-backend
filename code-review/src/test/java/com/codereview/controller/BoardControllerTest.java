@@ -16,12 +16,14 @@ import com.codereview.stub.BoardTagStubData;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.mapping.JpaMetamodelMappingContext;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -80,7 +82,7 @@ public class BoardControllerTest {
     List<BoardResponseDto.BoardDto> boardDtoList = BoardStubData.BoardListToBoardInfoDtoList(boardList);
 
 
-    given(boardService.getBoards(Mockito.anyInt(), Mockito.anyInt())).willReturn(boardRestPage);
+    given(boardService.getBoards(Mockito.any(Pageable.class))).willReturn(boardRestPage);
     given(mapper.boardListToBoardDtoList(Mockito.anyList())).willReturn(boardDtoList);
 
     // when
@@ -337,7 +339,7 @@ public class BoardControllerTest {
     List<Board> boardList = boardRestPage.getContent();
     List<BoardResponseDto.BoardDto> boardDtoList = BoardStubData.BoardListToBoardInfoDtoList(boardList);
 
-    given(boardService.getMyBoards(Mockito.anyLong(), Mockito.anyInt(), Mockito.anyInt())).willReturn(boardRestPage);
+    given(boardService.getMyBoards(Mockito.anyLong(), Mockito.any(Pageable.class))).willReturn(boardRestPage);
     given(mapper.boardListToBoardDtoList(Mockito.anyList())).willReturn(boardDtoList);
 
     // when
