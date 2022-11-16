@@ -4,6 +4,7 @@ import com.codereview.auth.service.AuthService;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.email.event.MemberRegistrationApplicationEvent;
+import com.codereview.member.entity.EmailVerified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
 import com.codereview.member.service.MemberService;
@@ -107,12 +108,18 @@ class AuthServiceTest {
         findMember.setVerifiedCode(UUID.randomUUID().toString());
         Member savedMember = memberRepository.save(findMember);
         lenient().doNothing().when(authService).verifiedByCode(Mockito.anyString(), Mockito.anyString());
+        savedMember.setEmailVerified(EmailVerified.Y);
+        savedMember.setRoles("ROLE_USER");
+        memberRepository.save(savedMember);
 
 
         //then
         assertThat(memberService.findMemberByEmail(findMember.getEmail()).getVerifiedCode())
                 .isEqualTo(savedMember.getVerifiedCode());
         assertThat(memberService.findMemberByEmail(member.getEmail()).getEmail()).isEqualTo(findMember.getEmail());
+        assertThat(memberService.findMemberByEmail(savedMember.getEmail()).getEmailVerified()).isEqualTo(EmailVerified.Y);
+        assertThat(memberService.findMemberByEmail(savedMember.getEmail()).getRoles()).isEqualTo("ROLE_USER");
+
 
 
     }
