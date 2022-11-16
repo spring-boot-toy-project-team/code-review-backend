@@ -18,21 +18,19 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 import java.util.Optional;
 import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 class AuthServiceTest {
-
-    @Spy
-    @InjectMocks
-    private MemberService memberService;
     @Spy
     @InjectMocks
     private AuthService authService;
+    @Mock
+    private MemberService memberService;
     @Mock
     private MemberRepository memberRepository;
     @Mock
@@ -55,20 +53,16 @@ class AuthServiceTest {
     @Test
     @DisplayName("인증 요청 이메일 전송")
     void sendEmail() {
+        // TODO: 성공 & 실패에 따른 테스트 케이스를 각각 만들어야 할것 같습니다.
         //given
-        Member member = Member.builder()
-                .email("hgd@gmail.com")
-                .password("12345678")
-                .roles("ROLE_USER")
-                .nickName("hgd")
-                .build();
-        Member save = memberRepository.save(member);
-        String email = "hgd@gmail.com";
+        Member member = MemberStubData.member();
+        String email = member.getEmail();
 
+        given(memberRepository.save(Mockito.any())).willReturn(member);
+        doReturn(member).when(memberService).findMemberByEmail(email);
 
         //when
         Member findMember = memberService.findMemberByEmail(email);
-        System.out.println("findMember = " + findMember.getEmail());
         findMember.setVerifiedCode(UUID.randomUUID().toString());
         Member savedMember = memberRepository.save(findMember);
         publisher.publishEvent(new MemberRegistrationApplicationEvent(this, Mockito.any(Member.class)));
