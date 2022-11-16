@@ -231,7 +231,7 @@ public class AuthControllerTest {
     String email = member.getEmail();
     String code = UUID.randomUUID().toString();
 
-    doNothing().when(authService).verifiedByEmail(email,code);
+    doNothing().when(authService).verifiedByCode(email,code);
 
     //when
     ResultActions actions = mockMvc.perform(

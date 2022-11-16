@@ -87,7 +87,7 @@ public class AuthController {
   public ResponseEntity<MessageResponseDto> emailValidation(@NotBlank @PathParam("email") String email,
                                                             @NotBlank @PathParam("code") String code){
 
-    authService.verifiedByEmail(email, code);
+    authService.verifiedByCode(email, code);
 
     return new ResponseEntity<>(MessageResponseDto.builder()
       .message("SUCCESS")

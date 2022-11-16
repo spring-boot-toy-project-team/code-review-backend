@@ -1,6 +1,8 @@
 package com.codereview.service;
 
 import com.codereview.auth.service.AuthService;
+import com.codereview.common.exception.BusinessLogicException;
+import com.codereview.common.exception.ExceptionCode;
 import com.codereview.email.event.MemberRegistrationApplicationEvent;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
@@ -51,8 +53,8 @@ class AuthServiceTest {
 //    }
 
     @Test
-    @DisplayName("인증 요청 이메일 전송")
-    void sendEmail() {
+    @DisplayName("인증 요청 이메일 전송 성공")
+    void SuccessSendEmail() {
         // TODO: 성공 & 실패에 따른 테스트 케이스를 각각 만들어야 할것 같습니다.
         //given
         Member member = MemberStubData.member();
@@ -73,29 +75,61 @@ class AuthServiceTest {
     }
 
     @Test
-    void verifiedByEmail() {
+    @DisplayName("인증 요청 이메일 전송 실패")
+    void FailureSendEmail(){
+        //given
+        Member member = MemberStubData.member();
+        String email = "hgd@naver.com";
+
+        doReturn(member).when(memberService).findMemberByEmail(email);
+
+        //when
+        Member findMember = memberService.findMemberByEmail(email);
+
+        //then
+        lenient().doThrow(new BusinessLogicException(ExceptionCode.EMAIL_INCORRECT))
+                .when(memberService).findMemberByEmail(email);
+    }
+
+    @Test
+    @DisplayName("이메일 인증 성공")
+    void SuccessVerifiedByCode() {
+        //given
+        Member member = MemberStubData.guestMember();
+        String email = member.getEmail();
+        String code = UUID.randomUUID().toString();
+
+        given(memberRepository.save(Mockito.any())).willReturn(member);
+        doReturn(member).when(memberService).findMemberByEmail(email);
+
+        //when
+        Member findMember = memberService.findMemberByEmail(email);
+        findMember.setVerifiedCode(UUID.randomUUID().toString());
+        Member savedMember = memberRepository.save(findMember);
+        lenient().doNothing().when(authService).verifiedByCode(Mockito.anyString(), Mockito.anyString());
+
+
+        //then
+        assertThat(memberService.findMemberByEmail(findMember.getEmail()).getVerifiedCode())
+                .isEqualTo(savedMember.getVerifiedCode());
+        assertThat(memberService.findMemberByEmail(member.getEmail()).getEmail()).isEqualTo(findMember.getEmail());
+
+
+    }
+
+    @Test
+    @DisplayName("이메일 인증 실패")
+    void FailureVerifiedByCode() {
+        //given
+        Member member = MemberStubData.guestMember();
+        String email = member.getEmail();
+        String code = UUID.randomUUID().toString();
+
+        //when
+        lenient().doNothing().when(authService).verifiedByCode(Mockito.anyString(),Mockito.anyString());
+
+        //then
+        lenient().doThrow(new BusinessLogicException(ExceptionCode.CODE_INCORRECT))
+                .when(authService).verifiedByCode(email,code);
     }
 }
-//
-//    public void verifiedByEmail(String email, String code){
-//        Member findMember = memberService.findMemberByEmail(email);
-//        if(!findMember.getVerifiedCode().equals(code)){
-//            throw new BusinessLogicException(ExceptionCode.CODE_INCORRECT);
-//        }
-//        findMember.setEmailVerified(EmailVerified.Y);
-//        findMember.setRoles("ROLE_USER");
-//        memberRepository.save(findMember);
-//    }
-//
-//    /**
-//     * 이메일 인증 요청
-//     */
-//    public void sendEmail(String email){
-//        Member findMember = memberService.findMemberByEmail(email);
-//        if(!findMember.getEmail().equals(email)){
-//            throw new BusinessLogicException(ExceptionCode.EMAIL_INCORRECT);
-//        }
-//        findMember.setVerifiedCode(UUID.randomUUID().toString());
-//        Member savedMember = memberRepository.save(findMember);
-//        publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
-//    }
