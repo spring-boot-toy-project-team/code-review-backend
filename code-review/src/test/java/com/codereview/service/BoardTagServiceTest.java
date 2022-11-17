@@ -18,13 +18,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.lang.reflect.Method;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BoardTagServiceTest {
@@ -39,100 +39,58 @@ public class BoardTagServiceTest {
   private TagRepository tagRepository;
 
   @Mock
+  private BoardTagRepository boardTagRepository;
+
+  @Mock
   private BoardRepository boardRepository;
 
-
-//  private final TagService tagService;
-//  private final BoardTagRepository boardTagRepository;
-//
-
-//
-//  private BoardTag updateBoardTag(BoardTag boardTag) {
-//    boardTag.setTag(tagService.findTagOrSave(boardTag.getTag()));
-//    if(existBoardTagByBoardIdAndTagId(boardTag.getBoard().getBoardId(), boardTag.getTag().getTagId()))
-//      return boardTag;
-//    return boardTagRepository.saveAndFlush(boardTag);
-//  }
-//
-//  @Transactional(readOnly = true)
-//  private boolean existBoardTagByBoardIdAndTagId(long boardId, long tagId) {
-//    return boardTagRepository.existsByBoardIdAndTagId(boardId, tagId);
-//  }
-//
-//  @Transactional(readOnly = true)
-//  public List<BoardTag> findBoardTagsByBoardId(long boardId) {
-//    return boardTagRepository.findAllByBoardId(boardId);
-//  }
-//
-//  public void deleteBoardTag(BoardTag boardTag) {
-//    boardTagRepository.delete(boardTag);
-//  }
-//
-//  /**
-//   * 기존의 BoardTag 업데이트
-//   * @param newBoard: 새로운 BoardTag
-//   * @param oldBoard: 기존의 BoardTag
-//   */
-//  public void deleteOldBoardTag(Board newBoard, Board oldBoard) {
-//    List<String> newTag = getNameOfTagsFromBoard(newBoard);
-//    deleteBoardTagIfNotContainsTagName(oldBoard, newTag);
-//    oldBoard.setBoardTags(newBoard.getBoardTags());
-//  }
-//
-//  /**
-//   * 게시글로부터 태그 이름 추출하는 함수
-//   * @param board: 추출할 게시글
-//   * @return
-//   */
-//  private List<String> getNameOfTagsFromBoard(Board board) {
-//    return board.getBoardTags().stream()
-//      .map(boardTag -> boardTag.getTag().getName())
-//      .collect(Collectors.toList());
-//  }
-//
-//  /**
-//   * 게시글로부터 태그 이름 리스트에 포함되지 않으면 삭제하는 함수
-//   * @param board: 비교할 게시글
-//   * @param tagList: 태그 이름 리스트
-//   */
-//  private void deleteBoardTagIfNotContainsTagName(Board board, List<String> tagList) {
-//    board.getBoardTags().stream()
-//      .filter(boardTag -> !tagList.contains(boardTag.getTag().getName()))
-//      .forEach(this::deleteBoardTag);
-//  }
-//
-//  public void updateMultipleBoardTag(Board board) {
-//    board.setBoardTags(board.getBoardTags().stream()
-//      .map(boardTag -> {
-//        boardTag.setBoard(board);
-//        return this.updateBoardTag(boardTag);
-//      })
-//      .collect(Collectors.toList())
-//    );
-//  }
-
   @Test
-  @DisplayName("")
+  @DisplayName("BoardTag 저장 테스트")
   public void createMultipleBoardTagTest() throws Exception {
-    //  public void createMultipleBoardTag(Board board) {
-//    board.setBoardTags(board.getBoardTags().stream()
-//      .peek(boardTag -> {
-//        boardTag.setBoard(board);
-//        boardTag.setTag(tagService.findTagOrSave(boardTag.getTag()));
-//      })
-//      .collect(Collectors.toList()));
-//  }
     // given
     Board board = BoardStubData.board();
     BoardTag boardTag = BoardTagStubData.boardTag();
-    board.setBoardTags(List.of(boardTag));
+    List<BoardTag> boardTagList = List.of(boardTag);
+    board.setBoardTags(boardTagList);
 
+    given(boardTagRepository.findAllByBoardId(Mockito.anyLong())).willReturn(boardTagList);
     doNothing().when(boardTagService).createMultipleBoardTag(Mockito.any(Board.class));
 
     // when
     boardTagService.createMultipleBoardTag(board);
 
     // then
-
+    List<BoardTag> findBoardTagList = boardTagRepository.findAllByBoardId(board.getBoardId());
+    Assertions.assertThat(board.getBoardTags().size()).isEqualTo(findBoardTagList.size());
   }
+
+  @Test
+  @DisplayName("게시글 식별자로 게시글-태그 조회 테스트")
+  public void findBoardTagsByBoardIdTest() throws Exception {
+    // given
+    long boardId = 1L;
+    List<BoardTag> boardTagList = BoardTagStubData.boardTagList();
+
+    given(boardTagRepository.findAllByBoardId(Mockito.anyLong())).willReturn(boardTagList);
+
+    // when
+    List<BoardTag> findBoardTagList = boardTagService.findBoardTagsByBoardId(boardId);
+
+    // then
+    Assertions.assertThat(boardTagList.size()).isEqualTo(findBoardTagList.size());
+  }
+
+  @Test
+  @DisplayName("게시글-태그 식별자 삭제 테스트")
+  public void deleteBoardTagTest() throws Exception {
+    // given
+    BoardTag boardTag = BoardTagStubData.boardTag();
+
+    // when
+    boardTagService.deleteBoardTag(boardTag);
+
+    // then
+    Mockito.verify(boardTagRepository).delete(boardTag);
+  }
+
 }
