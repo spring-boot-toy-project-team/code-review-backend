@@ -39,24 +39,10 @@ class AuthServiceTest {
     @Mock
     private ApplicationEventPublisher publisher;
 
-
-//    @BeforeEach
-//    void member(){
-//        Member member = Member.builder()
-//                .memberId(1L)
-//                .email("hgd@gmail.com")
-//                .password("12345678966")
-//                .roles("ROLE_GUEST")
-//                .nickName("hgd")
-//                .build();
-//        Member save = memberRepository.save(member);
-//        System.out.println("member = " + member.getMemberId()+" "+ member.getNickName()+ " " + member.getEmail());
-//    }
-
     @Test
     @DisplayName("인증 요청 이메일 전송 성공")
     void SuccessSendEmail() {
-        // TODO: 성공 & 실패에 따른 테스트 케이스를 각각 만들어야 할것 같습니다.
+
         //given
         Member member = MemberStubData.member();
         String email = member.getEmail();
@@ -111,14 +97,16 @@ class AuthServiceTest {
         savedMember.setEmailVerified(EmailVerified.Y);
         savedMember.setRoles("ROLE_USER");
         memberRepository.save(savedMember);
+        String memberInfo = memberService.findMemberByEmail(member.getEmail()).getEmail();
+
 
 
         //then
-        assertThat(memberService.findMemberByEmail(findMember.getEmail()).getVerifiedCode())
-                .isEqualTo(savedMember.getVerifiedCode());
-        assertThat(memberService.findMemberByEmail(member.getEmail()).getEmail()).isEqualTo(findMember.getEmail());
+        assertThat(memberInfo).isEqualTo(findMember.getEmail());
         assertThat(memberService.findMemberByEmail(savedMember.getEmail()).getEmailVerified()).isEqualTo(EmailVerified.Y);
         assertThat(memberService.findMemberByEmail(savedMember.getEmail()).getRoles()).isEqualTo("ROLE_USER");
+        assertThat(memberService.findMemberByEmail(findMember.getEmail()).getVerifiedCode()).isEqualTo(savedMember.getVerifiedCode());
+
 
 
 
@@ -133,7 +121,6 @@ class AuthServiceTest {
         String code = UUID.randomUUID().toString();
 
         //when
-        lenient().doNothing().when(authService).verifiedByCode(Mockito.anyString(),Mockito.anyString());
 
         //then
         lenient().doThrow(new BusinessLogicException(ExceptionCode.CODE_INCORRECT))
