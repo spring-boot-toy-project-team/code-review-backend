@@ -18,8 +18,5 @@
         <module name="code-review.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="code-review.querydsl" target="11" />
-    </bytecodeTargetLevel>
   </component>
 </project>

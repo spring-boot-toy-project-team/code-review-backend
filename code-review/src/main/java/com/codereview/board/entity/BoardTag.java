@@ -1,12 +1,16 @@
-package com.codereview.tag.entity;
+package com.codereview.board.entity;
 
-import com.codereview.board.entity.Board;
+import com.codereview.tag.entity.Tag;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 public class BoardTag {
 
@@ -23,8 +27,10 @@ public class BoardTag {
   private Tag tag;
 
   @Builder
-  public BoardTag(Long boardTagId){
+  public BoardTag(Long boardTagId, Board board, Tag tag){
     this.boardTagId = boardTagId;
+    this.board = board;
+    this.tag = tag;
   }
 
 }

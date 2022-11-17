@@ -24,6 +24,7 @@ public class WithMockCustomUserSecurityContextFactory implements WithSecurityCon
 
   private Member getMember(WithMockCustomUser customUser) {
     return Member.builder()
+      .memberId(customUser.memberId())
       .email(customUser.email())
       .password(customUser.password())
       .nickName(customUser.nickName())

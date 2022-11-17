@@ -16,6 +16,8 @@ public enum ExceptionCode {
   REFRESH_TOKEN_IS_EXPIRED(403, "Refresh Token is expired"),
   COOKIE_IS_NOT_EXISTS(404, "Cookie is not exists"),
   AUTHORIZATION_IS_NOT_FOUND(403, "Authorization header not found"),
+  BOARD_NOT_FOUND(404, "Board not found"),
+  TAG_NOT_FOUND(404, "Tag not found"),
   CODE_INCORRECT(404, "Code Incorrect"),
   EMAIL_INCORRECT(404, "Email Incorrect");
 
