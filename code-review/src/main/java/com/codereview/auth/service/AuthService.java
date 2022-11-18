@@ -80,7 +80,7 @@ public class AuthService {
   /**
    * 이메일 인증
    */
-  public void verifiedByEmail(String email, String code){
+  public void verifiedByCode(String email, String code){
     Member findMember = memberService.findMemberByEmail(email);
     if(!findMember.getVerifiedCode().equals(code)){
       throw new BusinessLogicException(ExceptionCode.CODE_INCORRECT);

@@ -49,7 +49,7 @@ public class Member extends Auditable {
 
   @Builder
   public Member(Long memberId, String email, String nickName, String password, String roles,
-                   AuthProvider provider, String profileImg, String githubUrl, String phone, Set<String> skills) {
+                   AuthProvider provider, String profileImg, String githubUrl, String phone, Set<String> skills, EmailVerified emailVerified) {
     this.memberId = memberId;
     this.email = email;
     this.nickName = nickName;
@@ -60,6 +60,7 @@ public class Member extends Auditable {
     this.githubUrl = githubUrl;
     this.phone = phone;
     this.skills = skills;
+    this.emailVerified = emailVerified;
   }
 
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
