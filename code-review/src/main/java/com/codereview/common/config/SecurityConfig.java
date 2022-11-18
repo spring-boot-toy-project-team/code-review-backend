@@ -30,9 +30,9 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(
-        securedEnabled = true,
-        jsr250Enabled = true,
-        prePostEnabled = true
+  securedEnabled = true,
+  jsr250Enabled = true,
+  prePostEnabled = true
 )
 public class SecurityConfig{
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
