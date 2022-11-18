@@ -1,24 +1,37 @@
 package com.codereview.repostiory;
 
+import com.codereview.auth.service.AuthService;
+import com.codereview.member.entity.EmailVerified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
 
+import com.codereview.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class MemberRepositoryTest {
   @Autowired
   private MemberRepository memberRepository;
+  @Mock
+  private AuthService authService;
+  @Mock
+  private MemberService memberService;
 
   @Test
   @DisplayName("회원 정보 저장 테스트")
@@ -57,5 +70,28 @@ public class MemberRepositoryTest {
     // then
     assertThat(optionalMember.isPresent()).isEqualTo(true);
     assertThat(optionalMember.get()).isEqualTo(savedMember);
+  }
+
+  @Test
+  @DisplayName("이메일 인증 후 db 업데이트")
+  void AfterEmailVerified() {
+    // given
+    String email = "hgd@gmail.com";
+    Member member = Member.builder()
+            .memberId(1L)
+            .email("hgd@gmail.com")
+            .password("12345678")
+            .roles("ROLE_USER")
+            .emailVerified(EmailVerified.Y)
+            .nickName("hgd")
+            .build();
+    Member savedMember = memberRepository.save(member);
+
+    // when
+    Optional<Member> optionalMember = memberRepository.findByEmail(email);
+
+    // then
+    assertThat(optionalMember.get().getEmailVerified()).isEqualTo(EmailVerified.Y);
+    assertThat(optionalMember.get().getRoles()).isEqualTo("ROLE_USER");
   }
 }
