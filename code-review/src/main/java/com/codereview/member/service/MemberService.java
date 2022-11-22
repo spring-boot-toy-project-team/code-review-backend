@@ -35,7 +35,7 @@ public class MemberService {
     return memberRepository.save(member);
   }
 
-  public MemberResponseDto.UpdateDto updateMember(UpdateDto member) {
+  public Member updateMember(Member member) {
 
     Member findMember = findVerifiedMember(member.getMemberId());
 
@@ -45,7 +45,7 @@ public class MemberService {
     Optional.ofNullable(member.getGithubUrl()).ifPresent(findMember::setGithubUrl);
     Optional.ofNullable(member.getProfileImg()).ifPresent(findMember::setProfileImg);
     Optional.ofNullable(member.getSkills()).ifPresent(findMember::setSkills);
-    return mapper.memberToUpdateDto(memberRepository.save(findMember));
+    return memberRepository.save(findMember);
   }
 
   public void deleteMember(long memberId) {
