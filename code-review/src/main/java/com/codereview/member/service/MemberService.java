@@ -2,20 +2,19 @@ package com.codereview.member.service;
 
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
-import com.codereview.member.dto.MemberResponseDto;
 import com.codereview.member.entity.AuthProvider;
 import com.codereview.member.entity.EmailVerified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;
 import com.codereview.member.repository.MemberRepository;
+import com.codereview.sms.entity.Sms;
+import com.codereview.sms.repository.SmsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
-import static com.codereview.member.dto.MemberRequestDto.UpdateDto;
 
 @Service
 @Transactional

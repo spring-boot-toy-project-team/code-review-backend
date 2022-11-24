@@ -58,6 +58,7 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'net.nurigo:sdk:4.2.3'
+	implementation 'org.apache.commons:commons-lang3:3.12.0'
 }
 
 /*
