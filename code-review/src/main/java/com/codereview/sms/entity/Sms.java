@@ -2,12 +2,16 @@ package com.codereview.sms.entity;
 
 import com.codereview.member.entity.Member;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
 @NoArgsConstructor
 public class Sms {
   @Id
