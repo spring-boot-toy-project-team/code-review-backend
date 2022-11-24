@@ -3,7 +3,7 @@ package com.codereview.auth.service;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.email.event.MemberRegistrationApplicationEvent;
-import com.codereview.member.entity.EmailVerified;
+import com.codereview.member.entity.Verified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
 import com.codereview.member.service.MemberService;
@@ -85,7 +85,7 @@ public class AuthService {
     if(!findMember.getVerifiedCode().equals(code)){
       throw new BusinessLogicException(ExceptionCode.CODE_INCORRECT);
     }
-    findMember.setEmailVerified(EmailVerified.Y);
+    findMember.setEmailVerified(Verified.Y);
     findMember.setRoles("ROLE_USER");
     memberRepository.save(findMember);
   }
