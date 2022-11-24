@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class SMS {
+public class smsSender {
 
     @Value("${sms.api_key}")
     private String API_KEY;

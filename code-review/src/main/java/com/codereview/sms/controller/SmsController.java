@@ -33,10 +33,25 @@ public class SmsController {
     public ResponseEntity<MessageResponseDto> savePhone(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                         @RequestBody @Valid SmsRequestDto.SavePhoneDto savePhoneDto){
         savePhoneDto.setMemberId(customUserDetails.getMember().getMemberId());
-        Sms sms = smsService.saveMemberPhone(mapper.savePhoneToMember(savePhoneDto));
+        smsService.saveMemberPhone(mapper.savePhoneToMember(savePhoneDto));
 
         return new ResponseEntity<>(MessageResponseDto.builder()
                 .message("OK")
                 .build(), HttpStatus.CREATED);
+    }
+
+    /**
+     * 핸드폰 번호 인증
+     */
+    @PostMapping("/phone-validation")
+    public ResponseEntity<MessageResponseDto> validation(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                         @RequestBody @Valid SmsRequestDto.validationPhoneDto validationPhoneDto, Sms sms){
+        validationPhoneDto.setMemberId(customUserDetails.getMember().getMemberId());
+
+        smsService.verifiedBySmsCode(sms,validationPhoneDto.getSmsCode());
+
+        return new ResponseEntity<>(MessageResponseDto.builder()
+                .message("SUCCESS")
+                .build(), HttpStatus.OK);
     }
 }

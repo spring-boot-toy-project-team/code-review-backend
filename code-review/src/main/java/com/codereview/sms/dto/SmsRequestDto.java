@@ -19,4 +19,15 @@ public class SmsRequestDto {
 
         private long memberId;
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class validationPhoneDto{
+        @NotEmpty
+        private String smsCode;
+
+        private long memberId;
+    }
 }

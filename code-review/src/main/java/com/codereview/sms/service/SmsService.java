@@ -2,7 +2,9 @@ package com.codereview.sms.service;
 
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
-import com.codereview.sms.SMS;
+import com.codereview.member.entity.Verified;
+import com.codereview.member.repository.MemberRepository;
+import com.codereview.sms.smsSender;
 import com.codereview.sms.entity.Sms;
 import com.codereview.sms.repository.SmsRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +20,42 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class SmsService {
     private final SmsRepository smsRepository;
-    private final SMS Sms;
+    private final smsSender smsSender;
+    private final MemberRepository memberRepository;
 
     public Sms saveMemberPhone(Sms sms) {
         verifyPhone(sms.getPhone());
         sms.setPhone(sms.getPhone());
         sms.setSmsCode(generateAuthNo());
         sms.setSendAt(LocalDateTime.now());
-        sms.setMember(sms.getMember());
-        Sms.send(sms.getPhone(),sms.getSmsCode());
+        sms.setSmsVerified(Verified.N);
+//        smsSender.send(sms.getPhone(),sms.getSmsCode());
         return smsRepository.save(sms);
+    }
+
+    /**
+     *
+     * 핸드폰 번호로 발송된 인증번호 확인
+     */
+    public void verifiedBySmsCode(Sms sms, String smsCode){
+        Sms findPhone = findMemberByPhone(sms.getPhone());
+        if(!findPhone.getSmsCode().equals(smsCode)){
+            throw new BusinessLogicException(ExceptionCode.CODE_INCORRECT);
+        }
+        findPhone.setSmsVerified(Verified.Y);
+        smsRepository.save(findPhone);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Sms findMemberByPhone(String phone){
+        return findVerifiedMemberByPhone(phone);
+    }
+
+    @Transactional(readOnly = true)
+    private Sms findVerifiedMemberByPhone(String phone) {
+        return smsRepository.findByPhone(phone)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PHONE_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)

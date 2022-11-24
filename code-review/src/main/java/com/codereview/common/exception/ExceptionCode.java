@@ -20,7 +20,8 @@ public enum ExceptionCode {
   TAG_NOT_FOUND(404, "Tag not found"),
   CODE_INCORRECT(404, "Code Incorrect"),
   EMAIL_INCORRECT(404, "Email Incorrect"),
-  PHONE_ALREADY_EXISTS(409, "Phone already exists" );
+  PHONE_ALREADY_EXISTS(409, "Phone already exists" ),
+  PHONE_NOT_FOUND(404, "Phone not found" );
 
   @Getter
   private int status;
