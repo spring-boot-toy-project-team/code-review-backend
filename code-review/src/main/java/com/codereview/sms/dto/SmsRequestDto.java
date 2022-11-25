@@ -1,5 +1,7 @@
 package com.codereview.sms.dto;
 
+
+import com.codereview.sms.entity.Sms;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,5 +31,7 @@ public class SmsRequestDto {
         private String smsCode;
 
         private long memberId;
+
+        private Sms sms;
     }
 }
