@@ -9,4 +9,6 @@ import java.util.Optional;
 @Repository
 public interface SmsRepository extends JpaRepository<Sms,Long> {
     Optional<Sms> findByPhone(String phone);
+
+    Optional<Sms> findBySmsCode(String smsCode);
 }

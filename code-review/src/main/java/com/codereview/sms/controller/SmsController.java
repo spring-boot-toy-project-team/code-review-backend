@@ -48,7 +48,7 @@ public class SmsController {
                                                          @RequestBody @Valid SmsRequestDto.validationPhoneDto validationPhoneDto){
         validationPhoneDto.setMemberId(customUserDetails.getMember().getMemberId());
 
-        smsService.verifiedBySmsCode(validationPhoneDto.getMemberId(), validationPhoneDto.getSmsCode());
+        smsService.verifiedBySmsCode(validationPhoneDto.getSmsCode());
         System.out.println(validationPhoneDto.getMemberId());
         return new ResponseEntity<>(MessageResponseDto.builder()
                 .message("SUCCESS")

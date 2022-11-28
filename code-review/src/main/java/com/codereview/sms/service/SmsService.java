@@ -36,28 +36,49 @@ public class SmsService {
      *
      * 핸드폰 번호로 발송된 인증번호 확인
      */
-    public void verifiedBySmsCode(long memberId, String smsCode){
-        Sms findPhone = findMember(memberId);
+    public void verifiedBySmsCode(String smsCode){
+        Sms findPhone = findSmsCode(smsCode);
         if(!findPhone.getSmsCode().equals(smsCode)){
             throw new BusinessLogicException(ExceptionCode.CODE_INCORRECT);
         }
-        System.out.println(findPhone.getMember().getMemberId());
-        System.out.println(findPhone.getMember().getPhone());
+        System.out.println(findPhone.getMember().getMemberId() + "!!!!!!");
         findPhone.setSmsVerified(Verified.Y);
         smsRepository.save(findPhone);
+        System.out.println(findPhone.getMember().getPhone());
+    }
+
+
+
+    /**
+     *
+     * 입력된 smsCode로 DB에서 찾아서 조회
+     */
+
+    @Transactional(readOnly = true)
+    public Sms findSmsCode(String smsCode){
+        return findVerifiedSmsCode(smsCode);
     }
 
     @Transactional(readOnly = true)
-    public Sms findMember(long memberId) {
-        return findVerifiedMember(memberId);
+    public Sms findVerifiedSmsCode(String smsCode){
+        return smsRepository.findBySmsCode(smsCode)
+                .orElseThrow(()->new BusinessLogicException(ExceptionCode.CODE_NOT_FOUND));
+
     }
 
-    @Transactional(readOnly = true)
-    private Sms findVerifiedMember(long memberId) {
-        return smsRepository.findById(memberId)
-                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-    }
+    //  MemberDB에서 가져온 회원 ID로 찾기 시도
+//    @Transactional(readOnly = true)
+//    public Sms findMember(long memberId) {
+//        return findVerifiedMember(memberId);
+//    }
+//
+//    @Transactional(readOnly = true)
+//    private Sms findVerifiedMember(long memberId) {
+//        return smsRepository.findById(memberId)
+//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+//    }
 
+    //  저장된 전화번호로 찾기 시도
 //    @Transactional(readOnly = true)
 //    public Sms findMemberByPhone(String phone){
 //        return findVerifiedMemberByPhone(phone);
