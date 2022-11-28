@@ -1,7 +1,6 @@
 package com.codereview.board.document;
 
 import com.codereview.board.entity.Board;
-import com.codereview.tag.entity.BoardTag;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.elasticsearch.annotations.*;
 
 import javax.persistence.Id;
-
 import java.time.LocalDateTime;
 
 import static org.springframework.data.elasticsearch.annotations.DateFormat.date_hour_minute_second_millis;
@@ -34,13 +32,15 @@ public class BoardDocument {
   private LocalDateTime createdAt;
 
   @Field(type = FieldType.Date, format = {date_hour_minute_second_millis, epoch_millis})
-  private LocalDateTime updatedAt;
+  private LocalDateTime modifiedAt;
 
-  private BoardTag boardTag;
-
-  public static BoardDocument create(Board board) {
+  public static BoardDocument from(Board board) {
     return BoardDocument.builder()
-      .boardId(board.get)
+      .boardId(board.getBoardId())
+      .createdAt(board.getCreatedAt())
+      .modifiedAt(board.getModifiedAt())
+      .title(board.getTitle())
+      .contents(board.getContents())
       .build();
   }
 }

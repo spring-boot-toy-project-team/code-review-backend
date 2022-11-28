@@ -1,0 +1,15 @@
+{
+  "properties" : {
+    "boardId" : {"type" : "keyword"},
+    "title" : {"type" : "text"},
+    "contents" : {"type" : "text"},
+    "createdAt" : {
+      "type" : "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS||epoch_millis"
+    },
+    "modifiedAt" : {
+      "type" : "date",
+      "format": "uuuu-MM-dd'T'HH:mm:ss.SSS||epoch_millis"
+    }
+  }
+}
