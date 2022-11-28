@@ -41,6 +41,7 @@ application.yml
 application-app.yml
 application-oauth.yml
 application-mail.yml
+application-es.yml
 
 ### env $$$
 db/.env
