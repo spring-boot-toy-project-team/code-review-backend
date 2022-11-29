@@ -2,7 +2,6 @@ package com.codereview.sms.repository;
 
 import com.codereview.sms.entity.Sms;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface SmsRepositoryCustom {

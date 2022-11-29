@@ -5,7 +5,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 import static com.codereview.sms.entity.QSms.sms;
@@ -26,7 +25,7 @@ public class SmsRepositoryImpl implements SmsRepositoryCustom{
                 .select(sms)
                 .from(sms)
                 .where(sms.smsCode.eq(smsCode), sms.member.memberId.eq(memberId))
-                .orderBy(sms.smsCode.desc())
+                .orderBy(sms.sendAt.desc())
                 .limit(1)
                 .fetchOne());
     }

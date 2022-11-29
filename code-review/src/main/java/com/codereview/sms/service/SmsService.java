@@ -23,7 +23,6 @@ public class SmsService {
     private final MemberRepository memberRepository;
 
     public Sms saveMemberPhone(Sms sms) {
-//        verifyPhone(sms.getPhone());
         sms.setSmsCode(generateAuthNo());
         sms.setMember(sms.getMember());
         smsSender.send(sms.getPhone(),sms.getSmsCode());
@@ -41,10 +40,9 @@ public class SmsService {
         }
         System.out.println(findPhone.getMember().getMemberId() + "!!!!!!");
         Member member = findVerifiedMember(memberId);
-        Optional.ofNullable(member.getPhone()).ifPresent(member::setPhone);
+        member.setPhone(findPhone.getPhone());
         memberRepository.save(member);
-//        findPhone.getMember().setPhone(smsRepository.findById(memberId).get().getPhone());
-        System.out.println(findPhone.getMember().getPhone());
+        System.out.println(findPhone.getPhone());
     }
 
     /**
@@ -64,18 +62,6 @@ public class SmsService {
 
     }
 
-    //  MemberDB에서 가져온 회원 ID로 찾기 시도
-//    @Transactional(readOnly = true)
-//    public Sms findMember(long memberId) {
-//        return findVerifiedMember(memberId);
-//    }
-//
-//    @Transactional(readOnly = true)
-//    private Sms findVerifiedMember(long memberId) {
-//        return smsRepository.findById(memberId)
-//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
-//    }
-
     @Transactional(readOnly = true)
     public Member findMember(long memberId) {
         return findVerifiedMember(memberId);
@@ -86,18 +72,6 @@ public class SmsService {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
-
-    //  저장된 전화번호로 찾기 시도
-//    @Transactional(readOnly = true)
-//    public Sms findMemberByPhone(String phone){
-//        return findVerifiedMemberByPhone(phone);
-//    }
-//
-//    @Transactional(readOnly = true)
-//    private Sms findVerifiedMemberByPhone(String phone) {
-//        return smsRepository.findByPhone(phone)
-//                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.PHONE_NOT_FOUND));
-//    }
 
     @Transactional(readOnly = true)
     public void verifyPhone(String phone){
