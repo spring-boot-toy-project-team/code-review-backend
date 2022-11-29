@@ -24,7 +24,7 @@ public class SmsRepositoryImpl implements SmsRepositoryCustom{
         return Optional.ofNullable(jpaQueryFactory
                 .select(sms)
                 .from(sms)
-                .where(sms.smsCode.eq(smsCode), sms.member.memberId.eq(memberId))
+                .where(sms.member.memberId.eq(memberId))
                 .orderBy(sms.sendAt.desc())
                 .limit(1)
                 .fetchOne());

@@ -8,9 +8,10 @@ import com.codereview.sms.smsSender;
 import com.codereview.sms.entity.Sms;
 import com.codereview.sms.repository.SmsRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.codereview.util.RandomStringUtils.generateAuthNo;
 
 
 @Service
@@ -69,10 +70,5 @@ public class SmsService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 
-    /**
-     * 인증코드 만들어주는 로직
-     */
-    public static String generateAuthNo() {
-        return RandomStringUtils.randomNumeric(6);
-    }
+
 }
