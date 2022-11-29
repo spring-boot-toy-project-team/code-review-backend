@@ -12,7 +12,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,18 +37,15 @@ public class SmsService {
         if(!findPhone.getSmsCode().equals(smsCode)){
             throw new BusinessLogicException(ExceptionCode.CODE_INCORRECT);
         }
-        System.out.println(findPhone.getMember().getMemberId() + "!!!!!!");
         Member member = findVerifiedMember(memberId);
         member.setPhone(findPhone.getPhone());
         memberRepository.save(member);
-        System.out.println(findPhone.getPhone());
     }
 
     /**
      *
      * 입력된 smsCode로 DB에서 찾아서 조회
      */
-
     @Transactional(readOnly = true)
     public Sms findSmsCode(String smsCode, long memberId){
         return findVerifiedSmsCode(smsCode, memberId);
@@ -73,13 +69,9 @@ public class SmsService {
                 .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
     }
 
-    @Transactional(readOnly = true)
-    public void verifyPhone(String phone){
-        Optional<Sms> optionalSms = smsRepository.findByPhone(phone);
-        if (optionalSms.isPresent())
-            throw new BusinessLogicException(ExceptionCode.PHONE_ALREADY_EXISTS);
-    }
-
+    /**
+     * 인증코드 만들어주는 로직
+     */
     public static String generateAuthNo() {
         return RandomStringUtils.randomNumeric(6);
     }
