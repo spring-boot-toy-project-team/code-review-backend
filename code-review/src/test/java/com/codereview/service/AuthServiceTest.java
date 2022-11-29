@@ -4,12 +4,11 @@ import com.codereview.auth.service.AuthService;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.email.event.MemberRegistrationApplicationEvent;
-import com.codereview.member.entity.EmailVerified;
+import com.codereview.member.entity.Verified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
 import com.codereview.member.service.MemberService;
 import com.codereview.stub.MemberStubData;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,13 +17,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
@@ -94,7 +91,7 @@ class AuthServiceTest {
         findMember.setVerifiedCode(UUID.randomUUID().toString());
         Member savedMember = memberRepository.save(findMember);
         lenient().doNothing().when(authService).verifiedByCode(Mockito.anyString(), Mockito.anyString());
-        savedMember.setEmailVerified(EmailVerified.Y);
+        savedMember.setEmailVerified(Verified.Y);
         savedMember.setRoles("ROLE_USER");
         memberRepository.save(savedMember);
         String memberInfo = memberService.findMemberByEmail(member.getEmail()).getEmail();
@@ -103,7 +100,7 @@ class AuthServiceTest {
 
         //then
         assertThat(memberInfo).isEqualTo(findMember.getEmail());
-        assertThat(memberService.findMemberByEmail(savedMember.getEmail()).getEmailVerified()).isEqualTo(EmailVerified.Y);
+        assertThat(memberService.findMemberByEmail(savedMember.getEmail()).getEmailVerified()).isEqualTo(Verified.Y);
         assertThat(memberService.findMemberByEmail(savedMember.getEmail()).getRoles()).isEqualTo("ROLE_USER");
         assertThat(memberService.findMemberByEmail(findMember.getEmail()).getVerifiedCode()).isEqualTo(savedMember.getVerifiedCode());
 

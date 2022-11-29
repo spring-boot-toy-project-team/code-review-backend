@@ -1,6 +1,6 @@
 package com.codereview.member.entity;
 
-public enum EmailVerified {
+public enum Verified {
     Y,
     N
 }

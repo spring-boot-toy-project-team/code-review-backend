@@ -1,7 +1,7 @@
 package com.codereview.repostiory;
 
 import com.codereview.auth.service.AuthService;
-import com.codereview.member.entity.EmailVerified;
+import com.codereview.member.entity.Verified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
 
@@ -10,18 +10,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.lenient;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -82,7 +78,7 @@ public class MemberRepositoryTest {
             .email("hgd@gmail.com")
             .password("12345678")
             .roles("ROLE_USER")
-            .emailVerified(EmailVerified.Y)
+            .emailVerified(Verified.Y)
             .nickName("hgd")
             .build();
     Member savedMember = memberRepository.save(member);
@@ -91,7 +87,7 @@ public class MemberRepositoryTest {
     Optional<Member> optionalMember = memberRepository.findByEmail(email);
 
     // then
-    assertThat(optionalMember.get().getEmailVerified()).isEqualTo(EmailVerified.Y);
+    assertThat(optionalMember.get().getEmailVerified()).isEqualTo(Verified.Y);
     assertThat(optionalMember.get().getRoles()).isEqualTo("ROLE_USER");
   }
 }
