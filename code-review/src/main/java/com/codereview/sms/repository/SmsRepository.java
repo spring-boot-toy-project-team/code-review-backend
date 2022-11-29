@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface SmsRepository extends JpaRepository<Sms,Long> {
-    Optional<Sms> findByPhone(String phone);
+public interface SmsRepository extends JpaRepository<Sms,Long>, SmsRepositoryCustom {
 
-    Optional<Sms> findBySmsCode(String smsCode);
 }

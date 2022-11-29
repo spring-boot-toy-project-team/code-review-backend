@@ -3,7 +3,6 @@ package com.codereview.sms.controller;
 import com.codereview.common.dto.response.MessageResponseDto;
 import com.codereview.security.CustomUserDetails;
 import com.codereview.sms.dto.SmsRequestDto;
-import com.codereview.sms.entity.Sms;
 import com.codereview.sms.mapper.SmsMapper;
 import com.codereview.sms.service.SmsService;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +47,7 @@ public class SmsController {
                                                          @RequestBody @Valid SmsRequestDto.validationPhoneDto validationPhoneDto){
         validationPhoneDto.setMemberId(customUserDetails.getMember().getMemberId());
 
-        smsService.verifiedBySmsCode(validationPhoneDto.getSmsCode());
+        smsService.verifiedBySmsCode(validationPhoneDto.getSmsCode(), customUserDetails.getMember().getMemberId());
         System.out.println(validationPhoneDto.getMemberId());
         return new ResponseEntity<>(MessageResponseDto.builder()
                 .message("SUCCESS")

@@ -1,7 +1,6 @@
 package com.codereview.sms.entity;
 
 import com.codereview.member.entity.Member;
-import com.codereview.member.entity.Verified;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,9 +27,6 @@ public class Sms {
   @ManyToOne
   @JoinColumn(name = "MEMBER_ID")
   private Member member;
-
-  @Enumerated(value = EnumType.STRING)
-  private Verified smsVerified;
 
   @Builder
   public Sms(Long smsId, String phone, String smsCode) {

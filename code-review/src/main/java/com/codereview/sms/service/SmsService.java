@@ -3,7 +3,6 @@ package com.codereview.sms.service;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
 import com.codereview.member.entity.Member;
-import com.codereview.member.entity.Verified;
 import com.codereview.member.repository.MemberRepository;
 import com.codereview.sms.smsSender;
 import com.codereview.sms.entity.Sms;
@@ -24,9 +23,8 @@ public class SmsService {
     private final MemberRepository memberRepository;
 
     public Sms saveMemberPhone(Sms sms) {
-        verifyPhone(sms.getPhone());
+//        verifyPhone(sms.getPhone());
         sms.setSmsCode(generateAuthNo());
-        sms.setSmsVerified(Verified.N);
         sms.setMember(sms.getMember());
         smsSender.send(sms.getPhone(),sms.getSmsCode());
         return smsRepository.save(sms);
@@ -36,18 +34,18 @@ public class SmsService {
      *
      * 핸드폰 번호로 발송된 인증번호 확인
      */
-    public void verifiedBySmsCode(String smsCode){
-        Sms findPhone = findSmsCode(smsCode);
+    public void verifiedBySmsCode(String smsCode, long memberId){
+        Sms findPhone = findSmsCode(smsCode, memberId);
         if(!findPhone.getSmsCode().equals(smsCode)){
             throw new BusinessLogicException(ExceptionCode.CODE_INCORRECT);
         }
         System.out.println(findPhone.getMember().getMemberId() + "!!!!!!");
-        findPhone.setSmsVerified(Verified.Y);
-        smsRepository.save(findPhone);
+        Member member = findVerifiedMember(memberId);
+        Optional.ofNullable(member.getPhone()).ifPresent(member::setPhone);
+        memberRepository.save(member);
+//        findPhone.getMember().setPhone(smsRepository.findById(memberId).get().getPhone());
         System.out.println(findPhone.getMember().getPhone());
     }
-
-
 
     /**
      *
@@ -55,13 +53,13 @@ public class SmsService {
      */
 
     @Transactional(readOnly = true)
-    public Sms findSmsCode(String smsCode){
-        return findVerifiedSmsCode(smsCode);
+    public Sms findSmsCode(String smsCode, long memberId){
+        return findVerifiedSmsCode(smsCode, memberId);
     }
 
     @Transactional(readOnly = true)
-    public Sms findVerifiedSmsCode(String smsCode){
-        return smsRepository.findBySmsCode(smsCode)
+    public Sms findVerifiedSmsCode(String smsCode, long memberId){
+        return smsRepository.findBySmsCode(smsCode, memberId)
                 .orElseThrow(()->new BusinessLogicException(ExceptionCode.CODE_NOT_FOUND));
 
     }
@@ -77,6 +75,17 @@ public class SmsService {
 //        return smsRepository.findById(memberId)
 //                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
 //    }
+
+    @Transactional(readOnly = true)
+    public Member findMember(long memberId) {
+        return findVerifiedMember(memberId);
+    }
+
+    @Transactional(readOnly = true)
+    private Member findVerifiedMember(long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND));
+    }
 
     //  저장된 전화번호로 찾기 시도
 //    @Transactional(readOnly = true)
