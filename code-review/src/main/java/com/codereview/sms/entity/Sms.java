@@ -29,10 +29,11 @@ public class Sms {
   private Member member;
 
   @Builder
-  public Sms(Long smsId, String phone, String smsCode) {
+  public Sms(Long smsId, String phone, String smsCode, Member member) {
     this.smsId = smsId;
     this.phone = phone;
     this.smsCode = smsCode;
+    this.member = member;
   }
 
   public void addMember(Member member) {
