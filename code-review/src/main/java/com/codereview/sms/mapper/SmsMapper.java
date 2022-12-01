@@ -8,11 +8,9 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface SmsMapper {
     default Sms savePhoneToSms(SmsRequestDto.SavePhoneDto savePhoneDto){
-        Sms sms = new Sms();
-        Member member = new Member();
-        member.setMemberId(savePhoneDto.getMemberId());
-        sms.setPhone(savePhoneDto.getPhone());
-        sms.setMember(member);
-        return sms;
+        return Sms.builder()
+            .member(Member.builder().memberId(savePhoneDto.getMemberId()).build())
+            .phone(savePhoneDto.getPhone())
+            .build();
     }
 }
