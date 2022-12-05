@@ -1,23 +1,21 @@
 package com.codereview.repostiory;
 
-import com.codereview.img.repository.ImageRepository;
+import com.codereview.config.TestConfig;
+import com.codereview.img.entity.ImgType;
+import com.codereview.img.repository.ImgRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
-import java.time.LocalDateTime;
-
+@Import({TestConfig.class})
 @DataJpaTest
-public class ImageRepositoryTest {
+public class ImgRepositoryTest {
   @Autowired
-  private ImageRepository imageRepository;
+  private ImgRepository imgRepository;
 
   @Test
   public void test() throws Exception {
-    LocalDateTime time = LocalDateTime.now();
-    System.out.println(time.getYear());
-    System.out.println(time.getMonth());
-    System.out.println(time.getDayOfMonth());
-    System.out.println(time.getDayOfWeek());
+
   }
 }

@@ -5,7 +5,7 @@ import com.codereview.board.entity.BoardTag;
 import com.codereview.board.repository.board.BoardRepository;
 import com.codereview.board.service.BoardService;
 import com.codereview.board.service.BoardTagService;
-import com.codereview.helper.RestPage;
+import com.codereview.common.helper.RestPage;
 import com.codereview.stub.BoardStubData;
 import com.codereview.stub.BoardTagStubData;
 import com.codereview.tag.service.TagService;
