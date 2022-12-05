@@ -1,4 +1,4 @@
-package com.codereview.email;
+package com.codereview.util.email;
 
 import org.springframework.stereotype.Component;
 
