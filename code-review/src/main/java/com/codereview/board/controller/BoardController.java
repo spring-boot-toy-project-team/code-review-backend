@@ -5,7 +5,7 @@ import com.codereview.board.mapper.BoardMapper;
 import com.codereview.board.service.BoardService;
 import com.codereview.common.dto.response.MultiResponseWithPageInfoDto;
 import com.codereview.common.dto.response.SingleResponseWithMessageDto;
-import com.codereview.helper.RestPage;
+import com.codereview.common.helper.RestPage;
 import com.codereview.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
