@@ -17,7 +17,9 @@ public class Img extends Auditable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long imgId;
 
-  private String dir;
+  private String uri;
+
+  private String path;
 
   @Enumerated(EnumType.STRING)
   private ImgType type;
