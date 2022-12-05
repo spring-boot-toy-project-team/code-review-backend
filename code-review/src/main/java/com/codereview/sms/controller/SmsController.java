@@ -32,7 +32,7 @@ public class SmsController {
     public ResponseEntity<MessageResponseDto> savePhone(@AuthenticationPrincipal CustomUserDetails customUserDetails,
                                                         @RequestBody @Valid SmsRequestDto.SavePhoneDto savePhoneDto){
         savePhoneDto.setMemberId(customUserDetails.getMember().getMemberId());
-        smsService.saveMemberPhone(mapper.savePhoneToMember(savePhoneDto));
+        smsService.saveMemberPhone(mapper.savePhoneToSms(savePhoneDto));
 
         return new ResponseEntity<>(MessageResponseDto.builder()
                 .message("OK")

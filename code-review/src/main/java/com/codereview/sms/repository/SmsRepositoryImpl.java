@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
-
 import static com.codereview.sms.entity.QSms.sms;
 
 @Repository
@@ -16,7 +15,11 @@ public class SmsRepositoryImpl implements SmsRepositoryCustom{
 
     @Override
     public Optional<Sms> findByPhone(String phone) {
-        return Optional.empty();
+        return Optional.ofNullable(jpaQueryFactory
+                .select(sms)
+                .from(sms)
+                .where(sms.phone.eq(phone))
+                .fetchOne());
     }
 
     @Override
