@@ -1,4 +1,4 @@
-package com.project.QR.config;
+package com.codereview.common.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
