@@ -1,10 +1,10 @@
 package com.codereview.repostiory;
 
 import com.codereview.auth.service.AuthService;
-import com.codereview.member.entity.Verified;
+import com.codereview.config.TestConfig;
 import com.codereview.member.entity.Member;
+import com.codereview.member.entity.Verified;
 import com.codereview.member.repository.MemberRepository;
-
 import com.codereview.member.service.MemberService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,13 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
+import static org.assertj.core.api.Assertions.assertThat;
 
+@Import({TestConfig.class})
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class MemberRepositoryTest {
