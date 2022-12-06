@@ -134,7 +134,7 @@ public class ImgControllerTest {
       .andExpect(jsonPath("$.message").value("SUCCESS"))
       .andDo(
         document(
-          "board-img-upload",
+          "comment-img-upload",
           getRequestPreProcessor(),
           getResponsePreProcessor(),
           requestHeaders(headerWithName("Authorization").description("Bearer AccessToken")),
