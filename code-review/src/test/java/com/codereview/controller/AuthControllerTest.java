@@ -200,9 +200,9 @@ public class AuthControllerTest {
 
     //when
     ResultActions actions = mockMvc.perform(
-            get("/auth/validation?email={email}",email)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
+       get("/auth/validation?email={email}",email)
+          .contentType(MediaType.APPLICATION_JSON)
+          .accept(MediaType.APPLICATION_JSON)
     );
 
     //then
@@ -214,11 +214,11 @@ public class AuthControllerTest {
                 getRequestPreProcessor(),
                 getResponsePreProcessor(),
                 requestParameters(
-                        parameterWithName("email").description("이메일")
+                  parameterWithName("email").description("이메일")
                 ),
                 responseFields(
-                        List.of(
-                                fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"))
+                  List.of(
+                    fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"))
                 )
               )
             );
@@ -237,8 +237,8 @@ public class AuthControllerTest {
     //when
     ResultActions actions = mockMvc.perform(
             get("/auth/email-validation?email={email}&code={code}",email,code)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON)
+              .contentType(MediaType.APPLICATION_JSON)
+              .accept(MediaType.APPLICATION_JSON)
     );
 
     //then
@@ -246,18 +246,18 @@ public class AuthControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.message").value("SUCCESS"))
             .andDo(
-                    document("validation",
-                            getRequestPreProcessor(),
-                            getResponsePreProcessor(),
-                            requestParameters(
-                                    parameterWithName("email").description("이메일"),
-                                    parameterWithName("code").description("인증 코드")
-                            ),
-                            responseFields(
-                                    List.of(
-                                            fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"))
-                            )
-                    )
+              document("validation-email",
+                getRequestPreProcessor(),
+                getResponsePreProcessor(),
+                  requestParameters(
+                    parameterWithName("email").description("이메일"),
+                    parameterWithName("code").description("인증 코드")
+                ),
+                responseFields(
+                  List.of(
+                    fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"))
+                )
+              )
             );
   }
 }
