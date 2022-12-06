@@ -24,7 +24,8 @@ public enum ExceptionCode {
   PHONE_NOT_FOUND(404, "Phone not found" ),
   CODE_NOT_FOUND(404, "Code not found" ),
   FILE_UPLOAD_FAIL(500, "File upload fail"),
-  INVALID_FILE_FORMAT(500, "Invalid file format");
+  INVALID_FILE_FORMAT(500, "Invalid file format"),
+  IMG_NOT_FOUND(404, "Image not found");
 
   @Getter
   private int status;
