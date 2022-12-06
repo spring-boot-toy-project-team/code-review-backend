@@ -166,3 +166,54 @@ include::{snippets}/board-delete/http-request.adoc[]
 
 .http-response
 include::{snippets}/board-delete/http-response.adoc[]
+
+== ImgController
+==== 게시판 이미지 업로드
+.curl-request
+include::{snippets}/board-img-upload/curl-request.adoc[]
+
+.http-request
+include::{snippets}/board-img-upload/http-request.adoc[]
+
+.request-headers
+include::{snippets}/board-img-upload/request-headers.adoc[]
+
+.path-parameters
+include::{snippets}/board-img-upload/path-parameters.adoc[]
+
+.request-parts
+include::{snippets}/board-img-upload/request-parts.adoc[]
+
+.http-response
+include::{snippets}/board-img-upload/http-response.adoc[]
+
+.response-body
+include::{snippets}/board-img-upload/response-body.adoc[]
+
+.response-fields
+include::{snippets}/board-img-upload/response-fields.adoc[]
+
+==== 댓글 이미지 업로드
+.curl-request
+include::{snippets}/comment-img-upload/curl-request.adoc[]
+
+.http-request
+include::{snippets}/comment-img-upload/http-request.adoc[]
+
+.request-headers
+include::{snippets}/comment-img-upload/request-headers.adoc[]
+
+.path-parameters
+include::{snippets}/comment-img-upload/path-parameters.adoc[]
+
+.request-parts
+include::{snippets}/comment-img-upload/request-parts.adoc[]
+
+.http-response
+include::{snippets}/comment-img-upload/http-response.adoc[]
+
+.response-body
+include::{snippets}/comment-img-upload/response-body.adoc[]
+
+.response-fields
+include::{snippets}/comment-img-upload/response-fields.adoc[]

@@ -1,6 +1,6 @@
-package com.codereview.email.event;
+package com.codereview.util.email.event;
 
-import com.codereview.email.EmailSender;
+import com.codereview.util.email.EmailSender;
 import com.codereview.member.entity.Member;
 import com.codereview.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;

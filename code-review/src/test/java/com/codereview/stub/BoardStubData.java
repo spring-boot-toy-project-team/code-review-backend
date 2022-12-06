@@ -4,7 +4,7 @@ import com.codereview.board.dto.board.BoardRequestDto;
 import com.codereview.board.dto.board.BoardResponseDto;
 import com.codereview.board.entity.Board;
 import com.codereview.board.entity.BoardTag;
-import com.codereview.helper.RestPage;
+import com.codereview.common.helper.RestPage;
 import com.codereview.member.entity.Member;
 import com.codereview.tag.entity.Tag;
 import org.springframework.data.domain.PageImpl;

@@ -1,4 +1,4 @@
-package com.codereview.advice;
+package com.codereview.common.advice;
 
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.response.ErrorResponse;
@@ -66,6 +66,12 @@ public class GlobalAdvice {
   @ExceptionHandler
   @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
   public ErrorResponse handle(IllegalStateException e) {
+    return ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
+  }
+
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+  public ErrorResponse handle(IllegalArgumentException e) {
     return ErrorResponse.of(HttpStatus.BAD_REQUEST, e.getMessage());
   }
 }

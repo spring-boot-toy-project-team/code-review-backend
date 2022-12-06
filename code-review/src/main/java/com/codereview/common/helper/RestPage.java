@@ -1,4 +1,4 @@
-package com.codereview.helper;
+package com.codereview.common.helper;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
