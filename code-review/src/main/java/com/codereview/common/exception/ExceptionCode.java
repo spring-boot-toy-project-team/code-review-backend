@@ -25,7 +25,8 @@ public enum ExceptionCode {
   CODE_NOT_FOUND(404, "Code not found" ),
   FILE_UPLOAD_FAIL(500, "File upload fail"),
   INVALID_FILE_FORMAT(500, "Invalid file format"),
-  IMG_NOT_FOUND(404, "Image not found");
+  IMG_NOT_FOUND(404, "Image not found"),
+  COMMENT_NOT_FOUND(404,"Comment not found");
 
   @Getter
   private int status;
