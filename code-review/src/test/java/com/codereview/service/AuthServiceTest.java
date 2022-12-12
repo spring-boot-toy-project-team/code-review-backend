@@ -3,7 +3,7 @@ package com.codereview.service;
 import com.codereview.auth.service.AuthService;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
-import com.codereview.email.event.MemberRegistrationApplicationEvent;
+import com.codereview.util.email.event.MemberRegistrationApplicationEvent;
 import com.codereview.member.entity.Verified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;

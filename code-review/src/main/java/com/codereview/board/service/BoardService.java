@@ -5,7 +5,7 @@ import com.codereview.board.entity.Board;
 import com.codereview.board.repository.board.BoardRepository;
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
-import com.codereview.helper.RestPage;
+import com.codereview.common.helper.RestPage;
 import com.codereview.util.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;

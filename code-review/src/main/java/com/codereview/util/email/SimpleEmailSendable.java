@@ -1,4 +1,4 @@
-package com.codereview.email;
+package com.codereview.util.email;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;

@@ -1,4 +1,4 @@
-package com.codereview.email.event;
+package com.codereview.util.email.event;
 
 import com.codereview.member.entity.Member;
 import lombok.Getter;

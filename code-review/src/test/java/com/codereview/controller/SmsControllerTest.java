@@ -41,6 +41,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@WithMockCustomUser
 @WebMvcTest(SmsController.class)
 @AutoConfigureMockMvc(addFilters = false)
 @MockBean(JpaMetamodelMappingContext.class)
@@ -64,7 +65,6 @@ public class SmsControllerTest {
 
     @Test
     @DisplayName("핸드폰번호 인증 요청 테스트")
-    @WithMockCustomUser
     void savePhone() throws Exception {
         //given
         SmsRequestDto.SavePhoneDto savePhoneDto = SmsStubData.savePhoneDto();
@@ -109,7 +109,6 @@ public class SmsControllerTest {
 
     @Test
     @DisplayName("핸드폰 인증 성공")
-    @WithMockCustomUser
     void phoneValidation() throws Exception {
         //given
         Member member = MemberStubData.member();
