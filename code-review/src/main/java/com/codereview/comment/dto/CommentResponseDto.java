@@ -13,7 +13,7 @@ public class CommentResponseDto {
   @AllArgsConstructor
   @NoArgsConstructor
   @Builder
-  public static class CommentDto {
+  public static class CommentInfoDto {
     private Long commentId;
     private String contents;
     private LocalDateTime createdAt;
