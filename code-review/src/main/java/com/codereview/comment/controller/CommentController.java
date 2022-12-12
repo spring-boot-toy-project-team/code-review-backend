@@ -61,4 +61,22 @@ public class CommentController {
             HttpStatus.CREATED);
   }
 
+  /**
+   * 댓글 수정
+   */
+  @PreAuthorize("isAuthenticated() and hasRole('ROLE_USER')")
+  @PatchMapping("/{comment-id}")
+  public ResponseEntity<SingleResponseWithMessageDto> updateComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                                                    @Positive @PathVariable("board-id") long boardId,
+                                                                    @Positive @PathVariable("comment-id") long commendId,
+                                                                    @Valid @RequestBody CommentRequestDto.updateCommentDto updateCommentDto){
+    updateCommentDto.setMemberId(customUserDetails.getMember().getMemberId());
+    updateCommentDto.setBoardId(boardId);
+    updateCommentDto.setCommentId(commendId);
+    Comment comment = commentService.updateComment(mapper.updateCommentToComment(updateCommentDto));
+
+    return new ResponseEntity<>(new SingleResponseWithMessageDto<>(mapper.commentToCommentInfo(comment),
+            "SUCCESS"),
+            HttpStatus.OK);
+  }
 }

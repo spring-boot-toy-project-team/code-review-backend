@@ -30,5 +30,12 @@ public interface CommentMapper {
             .build();
   }
 
-
+  default Comment updateCommentToComment(CommentRequestDto.updateCommentDto updateCommentDto){
+    return Comment.builder()
+            .member(Member.builder().memberId(updateCommentDto.getMemberId()).build())
+            .board(Board.builder().boardId(updateCommentDto.getBoardId()).build())
+            .commentId(updateCommentDto.getCommentId())
+            .contents(updateCommentDto.getContents())
+            .build();
+  }
 }

@@ -36,5 +36,29 @@ public class CommentService {
     return commentRepository.save(comment);
   }
 
+  /**
+   * 댓글 수정
+   */
+  public Comment updateComment(Comment comment) {
+    Comment findComment = findVerifiedCommentWithMemberId(comment.getCommentId(), comment.getMember().getMemberId());
+    Comment saveComment = beanUtils.copyNonNullProperties(comment, findComment);
 
+    return commentRepository.save(saveComment);
+  }
+
+
+  @Transactional(readOnly = true)
+  private Comment findVerifiedComment(long commentId){
+    Optional<Comment> optionalComment = commentRepository.findById(commentId);
+    return optionalComment.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
+  }
+
+  @Transactional(readOnly = true)
+  private Comment findVerifiedCommentWithMemberId(long commentId, long memberId){
+    Comment findComment = findVerifiedComment(commentId);
+    if (findComment.getMember().getMemberId() != memberId){
+      throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);
+    }
+    return findComment;
+  }
 }
