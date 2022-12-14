@@ -46,6 +46,14 @@ public class CommentService {
     return commentRepository.save(saveComment);
   }
 
+  /**
+   * 댓글 삭제
+   */
+
+  public void deleteCommentByIdAndMemberId(long commendId, Long memberId) {
+    Comment findComment = findVerifiedCommentWithMemberId(commendId, memberId);
+    commentRepository.delete(findComment);
+  }
 
   @Transactional(readOnly = true)
   private Comment findVerifiedComment(long commentId){
@@ -61,4 +69,6 @@ public class CommentService {
     }
     return findComment;
   }
+
+
 }

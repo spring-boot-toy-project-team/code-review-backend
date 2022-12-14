@@ -79,4 +79,18 @@ public class CommentController {
             "SUCCESS"),
             HttpStatus.OK);
   }
+
+  /**
+   * 댓글 삭제
+   */
+  @PreAuthorize("isAuthenticated() and hasRole('ROLE_USER')")
+  @DeleteMapping("/{comment-id}")
+  public ResponseEntity deleteComment(@AuthenticationPrincipal CustomUserDetails customUserDetails,
+                                      @Positive @PathVariable("board-id") long boardId,
+                                      @Positive @PathVariable("comment-id") long commendId){
+    commentService.deleteCommentByIdAndMemberId(commendId, customUserDetails.getMember().getMemberId());
+
+    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+  }
+
 }
