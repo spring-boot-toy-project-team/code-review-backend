@@ -1,6 +1,5 @@
 package com.codereview.comment.service;
 
-import com.codereview.board.entity.Board;
 import com.codereview.comment.entity.Comment;
 import com.codereview.comment.repository.CommentRepository;
 import com.codereview.common.exception.BusinessLogicException;
