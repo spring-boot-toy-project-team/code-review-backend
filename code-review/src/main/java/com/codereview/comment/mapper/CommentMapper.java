@@ -25,6 +25,7 @@ public interface CommentMapper {
     return CommentResponseDto.CommentInfoDto.builder()
             .commentId(comment.getCommentId())
             .contents(comment.getContents())
+            .nickName(comment.getMember().getNickName())
             .createdAt(comment.getCreatedAt())
             .modifiedAt(comment.getModifiedAt())
             .build();

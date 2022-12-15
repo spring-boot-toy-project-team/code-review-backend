@@ -24,8 +24,8 @@ public class CommentService {
 
   @Transactional(readOnly = true)
   @Cacheable(key = "{#page, #size}", value = "getComments")
-  public RestPage<Comment> getComments(Pageable pageable) {
-    return new RestPage<>(commentRepository.findAll(pageable));
+  public RestPage<Comment> getComments(long boardId, Pageable pageable) {
+    return new RestPage<>(commentRepository.findAllByBoardId(boardId,pageable));
   }
 
   /**

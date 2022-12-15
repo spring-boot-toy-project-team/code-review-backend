@@ -15,6 +15,7 @@ public class CommentResponseDto {
   @Builder
   public static class CommentInfoDto {
     private Long commentId;
+    private String nickName;
     private String contents;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
