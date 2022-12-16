@@ -9,6 +9,7 @@ import com.codereview.member.repository.MemberRepository;
 import com.codereview.member.service.MemberService;
 import com.codereview.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
@@ -80,6 +81,7 @@ public class AuthService {
   /**
    * 이메일 인증
    */
+  @CachePut(key = "#email", value = "loadUserByUsername")
   public void verifiedByCode(String email, String code){
     Member findMember = memberService.findMemberByEmail(email);
     if(!findMember.getVerifiedCode().equals(code)){
