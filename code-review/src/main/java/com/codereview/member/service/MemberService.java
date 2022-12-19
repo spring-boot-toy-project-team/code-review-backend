@@ -7,12 +7,15 @@ import com.codereview.member.entity.Verified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;
 import com.codereview.member.repository.MemberRepository;
+import com.codereview.util.email.event.MemberRegistrationApplicationEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -21,6 +24,7 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final MemberMapper mapper;
   private final PasswordEncoder passwordEncoder;
+  private final ApplicationEventPublisher publisher;
 
 
   public Member createMember(Member member) {
@@ -29,6 +33,8 @@ public class MemberService {
     member.setRoles("ROLE_GUEST");
     member.setProvider(AuthProvider.local);
     member.setEmailVerified(Verified.N);
+    member.setVerifiedCode(UUID.randomUUID().toString());
+    publisher.publishEvent(new MemberRegistrationApplicationEvent(this, member));
     return memberRepository.save(member);
   }
 
