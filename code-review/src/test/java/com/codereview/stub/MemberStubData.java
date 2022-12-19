@@ -20,6 +20,7 @@ public class MemberStubData {
       .profileImg("profileImg")
       .provider(AuthProvider.local)
       .skills(Set.of("java", "python"))
+      .emailVerified(Verified.N)
       .build();
   }
 
