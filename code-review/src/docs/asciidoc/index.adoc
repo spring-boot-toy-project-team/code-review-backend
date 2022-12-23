@@ -217,3 +217,42 @@ include::{snippets}/comment-img-upload/response-body.adoc[]
 
 .response-fields
 include::{snippets}/comment-img-upload/response-fields.adoc[]
+
+== CommentController
+
+==== 댓글 작성
+.curl-request
+include::{snippets}/comment-create/curl-request.adoc[]
+
+.http-request
+include::{snippets}/comment-create/http-request.adoc[]
+
+.request-fields
+include::{snippets}/comment-create/response-fields.adoc[]
+
+.http-response
+include::{snippets}/comment-create/http-response.adoc[]
+
+==== 댓글 수정
+.curl-request
+include::{snippets}/comment-update/curl-request.adoc[]
+
+.http-request
+include::{snippets}/comment-update/http-request.adoc[]
+
+.request-fields
+include::{snippets}/comment-update/response-fields.adoc[]
+
+.http-response
+include::{snippets}/comment-update/http-response.adoc[]
+
+==== 댓글 삭제
+.curl-request
+include::{snippets}/comment-delete/curl-request.adoc[]
+
+.http-request
+include::{snippets}/comment-delete/http-request.adoc[]
+
+.http-response
+include::{snippets}/comment-delete/http-response.adoc[]
+
