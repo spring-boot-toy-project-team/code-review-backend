@@ -2,6 +2,7 @@ package com.codereview.controller;
 
 import com.codereview.board.entity.Board;
 import com.codereview.comment.controller.CommentController;
+import com.codereview.comment.dto.CommentRequestDto;
 import com.codereview.comment.dto.CommentResponseDto;
 import com.codereview.comment.entity.Comment;
 import com.codereview.comment.mapper.CommentMapper;
@@ -11,7 +12,9 @@ import com.codereview.helper.WithMockCustomUser;
 import com.codereview.security.jwt.JwtTokenProvider;
 import com.codereview.stub.BoardStubData;
 import com.codereview.stub.CommentStubData;
+import com.codereview.stub.MemberStubData;
 import com.google.gson.Gson;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -63,6 +66,7 @@ public class CommentControllerTest {
 
   @Autowired
   private Gson gson;
+  private Board board;
 
   @Test
   @DisplayName("댓글 조회 테스트")
@@ -116,5 +120,73 @@ public class CommentControllerTest {
            )
          )
       );
+  }
+
+  @Test
+  @DisplayName("댓글 등록 테스트")
+  @WithMockCustomUser
+  public void createComment() throws Exception {
+    //given
+    Board board = BoardStubData.board();
+    CommentRequestDto.CommentDto commentDto = CommentStubData.commentDto();
+    Comment comment = CommentStubData.createCommentDtoToComment(commentDto);
+    CommentResponseDto.CommentInfoDto commentInfoDto = CommentStubData.commentInfoDto(comment);
+    String content = gson.toJson(commentDto);
+
+    given(mapper.createCommentDtoToComment(Mockito.any(CommentRequestDto.CommentDto.class))).willReturn(comment);
+    given(commentService.createComment(Mockito.any(Comment.class))).willReturn(comment);
+    given(mapper.commentToCommentInfo(Mockito.any(Comment.class))).willReturn(commentInfoDto);
+
+    //when
+    ResultActions actions = mockMvc.perform(
+      post("/board/{board-id}/comments",board.getBoardId())
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer {ACCESS_TOKEN}")
+        .content(content)
+    );
+
+    //then
+    actions
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.message").value("SUCCESS"))
+      .andExpect(jsonPath("$.data.commentId").value(commentInfoDto.getCommentId()))
+      .andExpect(jsonPath("$.data.contents").value(commentInfoDto.getContents()))
+      .andDo(
+        document(
+          "comment-create",
+          getRequestPreProcessor(),
+          getResponsePreProcessor(),
+          requestHeaders(headerWithName("Authorization").description("Bearer AccessToken")),
+          pathParameters(
+                  parameterWithName("board-id").description("게시글 식별자")
+          ),
+          requestFields(
+            List.of(
+              fieldWithPath("contents").type(JsonFieldType.STRING).description("댓글 내용"),
+              fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자").ignored(),
+              fieldWithPath("boardId").type(JsonFieldType.NUMBER).description("게시글 식별자").ignored()
+            )
+          ),
+          responseFields(
+            List.of(
+              fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+              fieldWithPath("data.commentId").type(JsonFieldType.NUMBER).description("댓글 식별자"),
+              fieldWithPath("data.contents").type(JsonFieldType.STRING).description("댓글 내용"),
+              fieldWithPath("data.nickName").type(JsonFieldType.STRING).description("댓글 작성자"),
+              fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("댓글 생성일자"),
+              fieldWithPath("data.modifiedAt").type(JsonFieldType.STRING).description("댓글 변경일자"),
+              fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지")
+            )
+          )
+        )
+      );
+  }
+
+  @Test
+  @DisplayName("댓글 수정 테스트")
+  @WithMockCustomUser
+  public void updateComment(){
+
   }
 }
