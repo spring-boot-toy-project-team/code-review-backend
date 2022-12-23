@@ -33,6 +33,7 @@ import java.util.List;
 import static com.codereview.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.codereview.util.ApiDocumentUtils.getResponsePreProcessor;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -122,7 +123,7 @@ public class CommentControllerTest {
   @Test
   @DisplayName("댓글 등록 테스트")
   @WithMockCustomUser
-  public void createComment() throws Exception {
+  public void createCommentTest() throws Exception {
     //given
     Board board = BoardStubData.board();
     CommentRequestDto.CommentDto commentDto = CommentStubData.commentDto();
@@ -183,7 +184,7 @@ public class CommentControllerTest {
   @Test
   @DisplayName("댓글 수정 테스트")
   @WithMockCustomUser
-  public void updateComment() throws Exception {
+  public void updateCommentTest() throws Exception {
     //given
     Board board = BoardStubData.board();
     Comment comment = CommentStubData.comment();
@@ -238,6 +239,40 @@ public class CommentControllerTest {
               fieldWithPath("data.modifiedAt").type(JsonFieldType.STRING).description("댓글 변경일자"),
               fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지")
             )
+          )
+        )
+      );
+  }
+
+  @Test
+  @DisplayName("댓글 삭제 테스트")
+  @WithMockCustomUser
+  public void deleteCommentTest() throws Exception {
+    //given
+    long commentId = 1L;
+    long boardId = 1L;
+    doNothing().when(commentService).deleteCommentByIdAndMemberId(Mockito.anyLong(), Mockito.anyLong());
+
+    //when
+    ResultActions actions = mockMvc.perform(
+      delete("/board/{board-id}/comments/{comment-id}",boardId,commentId)
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer {ACCESS_TOKEN}")
+    );
+
+    //then
+    actions
+      .andExpect(status().isNoContent())
+      .andDo(
+        document(
+          "comment-delete",
+          getRequestPreProcessor(),
+          getResponsePreProcessor(),
+          requestHeaders(headerWithName("Authorization").description("Bearer AccessToken")),
+          pathParameters(
+            parameterWithName("board-id").description("게시글 식별자"),
+            parameterWithName("comment-id").description("댓글 식별자")
           )
         )
       );
