@@ -12,9 +12,7 @@ import com.codereview.helper.WithMockCustomUser;
 import com.codereview.security.jwt.JwtTokenProvider;
 import com.codereview.stub.BoardStubData;
 import com.codereview.stub.CommentStubData;
-import com.codereview.stub.MemberStubData;
 import com.google.gson.Gson;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -35,7 +33,6 @@ import java.util.List;
 import static com.codereview.util.ApiDocumentUtils.getRequestPreProcessor;
 import static com.codereview.util.ApiDocumentUtils.getResponsePreProcessor;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doNothing;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -186,7 +183,63 @@ public class CommentControllerTest {
   @Test
   @DisplayName("댓글 수정 테스트")
   @WithMockCustomUser
-  public void updateComment(){
+  public void updateComment() throws Exception {
+    //given
+    Board board = BoardStubData.board();
+    Comment comment = CommentStubData.comment();
+    CommentRequestDto.updateCommentDto commentDto = CommentStubData.updateCommentDto(comment.getCommentId());
+    CommentResponseDto.CommentInfoDto commentInfoDto = CommentStubData.commentInfoDto(comment);
+    String content = gson.toJson(commentDto);
 
+    given(mapper.updateCommentToComment(Mockito.any(CommentRequestDto.updateCommentDto.class))).willReturn(comment);
+    given(commentService.updateComment(Mockito.any(Comment.class))).willReturn(comment);
+    given(mapper.commentToCommentInfo(Mockito.any(Comment.class))).willReturn(commentInfoDto);
+
+    //when
+    ResultActions actions = mockMvc.perform(
+      patch("/board/{board-id}/comments/{comment-id}",board.getBoardId(),comment.getCommentId())
+        .accept(MediaType.APPLICATION_JSON)
+        .contentType(MediaType.APPLICATION_JSON)
+        .header("Authorization", "Bearer {ACCESS_TOKEN}")
+        .content(content)
+    );
+
+    //then
+    actions
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.message").value("SUCCESS"))
+      .andExpect(jsonPath("$.data.commentId").value(commentInfoDto.getCommentId()))
+      .andExpect(jsonPath("$.data.contents").value(commentInfoDto.getContents()))
+      .andDo(
+        document(
+          "comment-update",
+          getRequestPreProcessor(),
+          getResponsePreProcessor(),
+          requestHeaders(headerWithName("Authorization").description("Bearer AccessToken")),
+          pathParameters(
+            parameterWithName("board-id").description("게시글 식별자"),
+            parameterWithName("comment-id").description("댓글 식별자")
+          ),
+          requestFields(
+            List.of(
+              fieldWithPath("contents").type(JsonFieldType.STRING).description("댓글 내용"),
+              fieldWithPath("commentId").type(JsonFieldType.NUMBER).description("댓글 식별자").ignored(),
+              fieldWithPath("memberId").type(JsonFieldType.NUMBER).description("회원 식별자").ignored(),
+              fieldWithPath("boardId").type(JsonFieldType.NUMBER).description("게시글 식별자").ignored()
+            )
+          ),
+          responseFields(
+            List.of(
+              fieldWithPath("data").type(JsonFieldType.OBJECT).description("결과 데이터"),
+              fieldWithPath("data.commentId").type(JsonFieldType.NUMBER).description("댓글 식별자"),
+              fieldWithPath("data.contents").type(JsonFieldType.STRING).description("댓글 내용"),
+              fieldWithPath("data.nickName").type(JsonFieldType.STRING).description("댓글 작성자"),
+              fieldWithPath("data.createdAt").type(JsonFieldType.STRING).description("댓글 생성일자"),
+              fieldWithPath("data.modifiedAt").type(JsonFieldType.STRING).description("댓글 변경일자"),
+              fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지")
+            )
+          )
+        )
+      );
   }
 }
