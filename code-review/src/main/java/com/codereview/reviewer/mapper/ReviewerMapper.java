@@ -41,4 +41,24 @@ public interface ReviewerMapper {
       .map(this::reviewerToReviewerShortInfoDto)
       .collect(Collectors.toList());
   }
+
+  default Reviewer updateReviewerDtoToReviewer(ReviewerRequestDto.UpdateReviewerDto updateReviewerDto) {
+    return Reviewer.builder()
+      .reviewerId(updateReviewerDto.getReviewerId())
+      .career(Career.valueOf(updateReviewerDto.getCareer().toUpperCase()))
+      .member(Member.builder()
+        .memberId(updateReviewerDto.getMemberId())
+        .build()
+      )
+      .introduction(updateReviewerDto.getIntroduction())
+      .skills(updateReviewerDto.getSkills().stream()
+        .map(String::toLowerCase)
+        .collect(Collectors.toSet())
+      )
+      .position(updateReviewerDto.getPosition().stream()
+        .map(position-> Position.valueOf(position.toUpperCase()).getDescription())
+        .collect(Collectors.joining(", "))
+      )
+      .build();
+  }
 }

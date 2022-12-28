@@ -19,4 +19,17 @@ public class ReviewerRequestDto {
     private Set<String> position;
     private String career;
   }
+
+  @Data
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Builder
+  public static class UpdateReviewerDto {
+    private Long memberId;
+    private Long reviewerId;
+    private Set<String> skills;
+    private String introduction;
+    private Set<String> position;
+    private String career;
+  }
 }

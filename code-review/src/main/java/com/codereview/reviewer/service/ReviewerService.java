@@ -7,6 +7,7 @@ import com.codereview.reviewer.entity.Career;
 import com.codereview.reviewer.entity.Position;
 import com.codereview.reviewer.entity.Reviewer;
 import com.codereview.reviewer.repository.ReviewerRepository;
+import com.codereview.util.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReviewerService {
   private final ReviewerRepository reviewerRepository;
+  private final CustomBeanUtils<Reviewer> beanUtils;
 
   public Reviewer enroll(Reviewer reviewer) {
     existsReviewerByMemberId(reviewer.getMember().getMemberId());
@@ -57,7 +59,27 @@ public class ReviewerService {
   }
 
   @Transactional(readOnly = true)
-  public RestPage<Reviewer> getReviewerList(Pageable pageable) {
+  public RestPage<Reviewer> getReviewers(Pageable pageable) {
     return new RestPage<>(reviewerRepository.findAll(pageable));
+  }
+
+  public Reviewer updateReviewer(Reviewer reviewer) {
+    Reviewer findReviewer = findVerifiedReviewer(reviewer.getReviewerId());
+    if(!Objects.equals(findReviewer.getMember().getMemberId(), reviewer.getMember().getMemberId())) {
+      throw new BusinessLogicException(ExceptionCode.FORBIDDEN);
+    }
+    Reviewer saveReviewer = beanUtils.copyNonNullProperties(reviewer, findReviewer);
+    return reviewerRepository.save(saveReviewer);
+  }
+
+  @Transactional(readOnly = true)
+  public Reviewer getReviewer(Long reviewerId) {
+    return findVerifiedReviewer(reviewerId);
+  }
+
+  @Transactional(readOnly = true)
+  private Reviewer findVerifiedReviewer(Long reviewerId) {
+    Optional<Reviewer> optionalReviewer = reviewerRepository.findById(reviewerId);
+    return optionalReviewer.orElseThrow(() -> new BusinessLogicException(ExceptionCode.REVIEWER_NOT_FOUND));
   }
 }
