@@ -24,9 +24,9 @@ services:
 
   es:
     build:
-      context: .
+      dockerfile: es.Dockerfile
       args:
-        ELK_VERSION: 7.15.2
+        ELK_VERSION: 8.5.1
     container_name: es
     environment:
       - node.name=single-node
@@ -38,9 +38,27 @@ services:
     networks:
       - es-bridge
 
+  logstash:
+    build:
+      dockerfile: ls.Dockerfile
+      args:
+        ELK_VERSION: 8.5.1
+    container_name: logstash
+    environment:
+      SERVER_NAME: logstash
+      ELASTICSEARCH_HOSTS: http://es:9200
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    depends_on:
+      - es
+      - postgres-db
+    networks:
+      - es-bridge
+
   kibana:
     container_name: kibana
-    image: docker.elastic.co/kibana/kibana:7.15.2
+    image: docker.elastic.co/kibana/kibana:8.5.1
     environment:
       SERVER_NAME: kibana
       ELASTICSEARCH_HOSTS: http://es:9200
