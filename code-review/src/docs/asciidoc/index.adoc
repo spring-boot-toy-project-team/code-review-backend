@@ -125,7 +125,7 @@ include::{snippets}/board-get/curl-request.adoc[]
 .http-request
 include::{snippets}/board-get/http-request.adoc[]
 
-.request-fields
+.response-fields
 include::{snippets}/board-get/response-fields.adoc[]
 
 .http-response
@@ -138,7 +138,7 @@ include::{snippets}/board-list-get/curl-request.adoc[]
 .http-request
 include::{snippets}/board-list-get/http-request.adoc[]
 
-.request-fields
+.response-fields
 include::{snippets}/board-list-get/response-fields.adoc[]
 
 .http-response
@@ -151,7 +151,7 @@ include::{snippets}/board-update/curl-request.adoc[]
 .http-request
 include::{snippets}/board-update/http-request.adoc[]
 
-.request-fields
+.response-fields
 include::{snippets}/board-update/response-fields.adoc[]
 
 .http-response
@@ -217,3 +217,110 @@ include::{snippets}/comment-img-upload/response-body.adoc[]
 
 .response-fields
 include::{snippets}/comment-img-upload/response-fields.adoc[]
+
+== ReviewerController
+==== 리뷰어 등록
+.http-request
+include::{snippets}/reviewer-enroll/http-request.adoc[]
+.request-headers
+include::{snippets}/reviewer-enroll/request-headers.adoc[]
+.request-body
+include::{snippets}/reviewer-enroll/request-body.adoc[]
+.request-fields
+include::{snippets}/reviewer-enroll/request-fields.adoc[]
+.http-response
+include::{snippets}/reviewer-enroll/http-response.adoc[]
+.response-body
+include::{snippets}/reviewer-enroll/response-body.adoc[]
+.response-fields
+include::{snippets}/reviewer-enroll/response-fields.adoc[]
+
+==== 리뷰어 변경
+.http-request
+include::{snippets}/reviewer-update/http-request.adoc[]
+.request-headers
+include::{snippets}/reviewer-update/request-headers.adoc[]
+.path-parameters
+include::{snippets}/reviewer-update/path-parameters.adoc[]
+.request-body
+include::{snippets}/reviewer-update/request-body.adoc[]
+.request-fields
+include::{snippets}/reviewer-update/request-fields.adoc[]
+.http-response
+include::{snippets}/reviewer-update/http-response.adoc[]
+.response-body
+include::{snippets}/reviewer-update/response-body.adoc[]
+.response-fields
+include::{snippets}/reviewer-update/response-fields.adoc[]
+
+==== 리뷰어들 조회
+.http-request
+include::{snippets}/reviewer-list-get/http-request.adoc[]
+.request-headers
+include::{snippets}/reviewer-list-get/request-headers.adoc[]
+.request-body
+include::{snippets}/reviewer-list-get/request-body.adoc[]
+.http-response
+include::{snippets}/reviewer-list-get/http-response.adoc[]
+.response-body
+include::{snippets}/reviewer-list-get/response-body.adoc[]
+.response-fields
+include::{snippets}/reviewer-list-get/response-fields.adoc[]
+
+==== 리뷰어 조회
+.http-request
+include::{snippets}/reviewer-get/http-request.adoc[]
+.request-headers
+include::{snippets}/reviewer-get/request-headers.adoc[]
+.path-parameters
+include::{snippets}/reviewer-get/path-parameters.adoc[]
+.request-body
+include::{snippets}/reviewer-get/request-body.adoc[]
+.http-response
+include::{snippets}/reviewer-get/http-response.adoc[]
+.response-body
+include::{snippets}/reviewer-get/response-body.adoc[]
+.response-fields
+include::{snippets}/reviewer-get/response-fields.adoc[]
+
+==== 리뷰어 삭제
+.http-request
+include::{snippets}/reviewer-delete/http-request.adoc[]
+.request-headers
+include::{snippets}/reviewer-delete/request-headers.adoc[]
+.path-parameters
+include::{snippets}/reviewer-delete/path-parameters.adoc[]
+.request-body
+include::{snippets}/reviewer-delete/request-body.adoc[]
+.http-response
+include::{snippets}/reviewer-delete/http-response.adoc[]
+.response-body
+include::{snippets}/reviewer-delete/response-body.adoc[]
+
+==== 경력 사항 조회
+.http-request
+include::{snippets}/careers-get/http-request.adoc[]
+.request-headers
+include::{snippets}/careers-get/request-headers.adoc[]
+.request-body
+include::{snippets}/careers-get/request-body.adoc[]
+.http-response
+include::{snippets}/careers-get/http-response.adoc[]
+.response-body
+include::{snippets}/careers-get/response-body.adoc[]
+.response-fields
+include::{snippets}/careers-get/response-fields.adoc[]
+
+==== 포지션 조회
+.http-request
+include::{snippets}/positions-get/http-request.adoc[]
+.request-headers
+include::{snippets}/positions-get/request-headers.adoc[]
+.request-body
+include::{snippets}/positions-get/request-body.adoc[]
+.http-response
+include::{snippets}/positions-get/http-response.adoc[]
+.response-body
+include::{snippets}/positions-get/response-body.adoc[]
+.response-fields
+include::{snippets}/positions-get/response-fields.adoc[]
