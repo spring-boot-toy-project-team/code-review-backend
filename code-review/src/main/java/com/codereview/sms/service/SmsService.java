@@ -8,6 +8,8 @@ import com.codereview.sms.smsSender;
 import com.codereview.sms.entity.Sms;
 import com.codereview.sms.repository.SmsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,7 @@ public class SmsService {
      *
      * 핸드폰 번호로 발송된 인증번호 확인
      */
+    @CachePut(key = "#root.target.findById(#memberId).email", value = "loadUserByUsername")
     public void verifiedBySmsCode(String smsCode, long memberId){
         Sms findPhone = findSmsCode(smsCode, memberId);
         if(!findPhone.getSmsCode().equals(smsCode)){

@@ -23,6 +23,21 @@ public class MemberStubData {
       .build();
   }
 
+  public static Member member(Long memberId) {
+    return Member.builder()
+      .email("hgd@gmail.com")
+      .password("12345678")
+      .nickName("hgd")
+      .roles("ROLE_USER")
+      .memberId(memberId)
+      .githubUrl("githuburl")
+      .phone("010-1234-5678")
+      .profileImg("profileImg")
+      .provider(AuthProvider.local)
+      .skills(Set.of("java", "python"))
+      .build();
+  }
+
   public static MemberRequestDto.SingUpDto singUpDto() {
     return MemberRequestDto.SingUpDto.builder()
       .email("hgd@gmail.com")

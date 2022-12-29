@@ -1,14 +1,18 @@
 package com.codereview.reviewer.entity;
 
 import com.codereview.common.audit.Auditable;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import com.codereview.member.entity.Member;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
 
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Reviewer extends Auditable {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,13 +24,12 @@ public class Reviewer extends Auditable {
   @CollectionTable(joinColumns = @JoinColumn(name = "REVIEWER_ID"))
   private Set<String> skills;
 
-  private Career career;
+  @Column(columnDefinition = "TEXT")
+  private String introduction;
 
-  @Builder
-  public Reviewer(Long reviewerId, String position, Set<String> skills, Career career) {
-    this.reviewerId = reviewerId;
-    this.position = position;
-    this.skills = skills;
-    this.career = career;
-  }
+  @OneToOne
+  @JoinColumn(name = "MEMBER_ID")
+  private Member member;
+
+  private Career career;
 }

@@ -1,0 +1,74 @@
+version: "3.7"
+services:
+  postgres-db:
+    image: postgres
+    restart: always
+    container_name: code_review
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    container_name: cache
+    hostname: cache
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - "6379:6379"
+
+  es:
+    build:
+      dockerfile: es.Dockerfile
+      args:
+        ELK_VERSION: 8.5.1
+    container_name: es
+    environment:
+      - node.name=single-node
+      - cluster.name=code_review
+      - discovery.type=single-node
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - es-bridge
+
+  logstash:
+    build:
+      dockerfile: ls.Dockerfile
+      args:
+        ELK_VERSION: 8.5.1
+    container_name: logstash
+    environment:
+      SERVER_NAME: logstash
+      ELASTICSEARCH_HOSTS: http://es:9200
+    ports:
+      - "5000:5000"
+      - "9600:9600"
+    depends_on:
+      - es
+      - postgres-db
+    networks:
+      - es-bridge
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.5.1
+    environment:
+      SERVER_NAME: kibana
+      ELASTICSEARCH_HOSTS: http://es:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - es
+    networks:
+      - es-bridge
+
+networks:
+  es-bridge:
+    driver: bridge
