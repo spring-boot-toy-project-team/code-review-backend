@@ -386,7 +386,7 @@ public class ReviewerControllerTest {
       .andExpect(status().isOk())
       .andDo(
         document(
-          "careers-get",
+          "positions-get",
           getRequestPreProcessor(),
           getResponsePreProcessor(),
           requestHeaders(headerWithName("Authorization").description("Bearer AccessToken")),
