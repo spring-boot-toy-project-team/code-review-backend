@@ -2,12 +2,15 @@ package com.codereview.auth.service;
 
 import com.codereview.common.exception.BusinessLogicException;
 import com.codereview.common.exception.ExceptionCode;
+import com.codereview.util.email.event.MemberRegistrationApplicationEvent;
 import com.codereview.member.entity.Verified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.repository.MemberRepository;
 import com.codereview.member.service.MemberService;
 import com.codereview.security.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +33,7 @@ public class AuthService {
   private final RedisTemplate<String, Object> redisTemplate;
   private final HttpServletResponse response;
   private final MemberService memberService;
+  private final ApplicationEventPublisher publisher;
 
   /**
    * 로그인 메서드
@@ -77,6 +81,7 @@ public class AuthService {
   /**
    * 이메일 인증
    */
+  @CachePut(key = "#email", value = "loadUserByUsername")
   public void verifiedByCode(String email, String code){
     Member findMember = memberService.findMemberByEmail(email);
     if(!findMember.getVerifiedCode().equals(code)){
@@ -85,5 +90,18 @@ public class AuthService {
     findMember.setEmailVerified(Verified.Y);
     findMember.setRoles("ROLE_USER");
     memberRepository.save(findMember);
+  }
+
+  /**
+   * 이메일 인증 요청
+   */
+  public void sendEmail(String email){
+    Member findMember = memberService.findMemberByEmail(email);
+    if(!findMember.getEmail().equals(email)){
+      throw new BusinessLogicException(ExceptionCode.EMAIL_INCORRECT);
+    }
+    findMember.setVerifiedCode(UUID.randomUUID().toString());
+    Member savedMember = memberRepository.save(findMember);
+    publisher.publishEvent(new MemberRegistrationApplicationEvent(this, savedMember));
   }
 }

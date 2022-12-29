@@ -11,230 +11,158 @@ v1.0.0, 2022.12.01
 == AuthController
 
 ==== 회원가입
+.curl-request
+include::{snippets}/signup/curl-request.adoc[]
+
 .http-request
 include::{snippets}/signup/http-request.adoc[]
 
-.request-body
-include::{snippets}/signup/request-body.adoc[]
-
 .request-fields
-include::{snippets}/signup/request-fields.adoc[]
+include::{snippets}/signup/response-fields.adoc[]
 
 .http-response
 include::{snippets}/signup/http-response.adoc[]
 
-.response-body
-include::{snippets}/signup/response-body.adoc[]
-
-.response-fields
-include::{snippets}/signup/response-fields.adoc[]
-
 ==== 로그인
+.curl-request
+include::{snippets}/login/curl-request.adoc[]
+
 .http-request
 include::{snippets}/login/http-request.adoc[]
 
-.request-body
-include::{snippets}/login/request-body.adoc[]
-
 .request-fields
-include::{snippets}/login/request-fields.adoc[]
+include::{snippets}/login/response-fields.adoc[]
 
 .http-response
 include::{snippets}/login/http-response.adoc[]
 
-.response-body
-include::{snippets}/login/response-body.adoc[]
-
-.response-fields
-include::{snippets}/login/response-fields.adoc[]
-
 ==== 토큰 재발급
+.curl-request
+include::{snippets}/reIssue/curl-request.adoc[]
+
 .http-request
 include::{snippets}/reIssue/http-request.adoc[]
 
-.request-headers
-include::{snippets}/reIssue/request-headers.adoc[]
+.request-fields
+include::{snippets}/reIssue/response-fields.adoc[]
 
 .http-response
 include::{snippets}/reIssue/http-response.adoc[]
 
-.response-body
-include::{snippets}/reIssue/response-body.adoc[]
-
-.response-fields
-include::{snippets}/reIssue/response-fields.adoc[]
-
 ==== 이메일 인증 요청
+.curl-request
+include::{snippets}/SendEmail/curl-request.adoc[]
+
 .http-request
 include::{snippets}/SendEmail/http-request.adoc[]
 
-.request-parameters
-include::{snippets}/SendEmail/request-parameters.adoc[]
+.request-fields
+include::{snippets}/SendEmail/response-fields.adoc[]
 
 .http-response
 include::{snippets}/SendEmail/http-response.adoc[]
 
-.response-body
-include::{snippets}/SendEmail/response-body.adoc[]
-
-.response-fields
-include::{snippets}/SendEmail/response-fields.adoc[]
-
 ==== 이메일 인증
+.curl-request
+include::{snippets}/validation-email/curl-request.adoc[]
+
 .http-request
 include::{snippets}/validation-email/http-request.adoc[]
 
-.request-parameters
-include::{snippets}/validation-email/request-parameters.adoc[]
+.request-fields
+include::{snippets}/validation-email/response-fields.adoc[]
 
 .http-response
 include::{snippets}/validation-email/http-response.adoc[]
 
-.response-body
-include::{snippets}/validation-email/response-body.adoc[]
-
-.response-fields
-include::{snippets}/validation-email/response-fields.adoc[]
-
 == SmsController
 
 ==== 핸드폰 인증 요청
+.curl-request
+include::{snippets}/phone-save/curl-request.adoc[]
+
 .http-request
 include::{snippets}/phone-save/http-request.adoc[]
-
-.request-headers
-include::{snippets}/phone-save/request-headers.adoc[]
-
-.request-body
-include::{snippets}/phone-save/request-body.adoc[]
-
-.request-fields
-include::{snippets}/phone-save/request-fields.adoc[]
-
-.http-response
-include::{snippets}/phone-save/http-response.adoc[]
-
-.response-body
-include::{snippets}/phone-save/response-body.adoc[]
 
 .request-fields
 include::{snippets}/phone-save/response-fields.adoc[]
 
+.http-response
+include::{snippets}/phone-save/http-response.adoc[]
+
 ==== 핸드폰 인증
+.curl-request
+include::{snippets}/validation-phone/curl-request.adoc[]
+
 .http-request
 include::{snippets}/validation-phone/http-request.adoc[]
-
-.request-headers
-include::{snippets}/validation-phone/request-headers.adoc[]
-
-.request-body
-include::{snippets}/validation-phone/request-body.adoc[]
-
-.request-fields
-include::{snippets}/validation-phone/request-fields.adoc[]
-
-.http-response
-include::{snippets}/validation-phone/http-response.adoc[]
-
-.response-body
-include::{snippets}/validation-phone/response-body.adoc[]
 
 .request-fields
 include::{snippets}/validation-phone/response-fields.adoc[]
 
+.http-response
+include::{snippets}/validation-phone/http-response.adoc[]
+
 == BoardController
 
 ==== 게시판 작성
+.curl-request
+include::{snippets}/board-create/curl-request.adoc[]
+
 .http-request
 include::{snippets}/board-create/http-request.adoc[]
-
-.request-headers
-include::{snippets}/board-create/request-headers.adoc[]
-
-.request-body
-include::{snippets}/board-create/request-body.adoc[]
-
-.request-fields
-include::{snippets}/board-create/request-fields.adoc[]
-
-.http-response
-include::{snippets}/board-create/http-response.adoc[]
-
-.response-body
-include::{snippets}/board-create/response-body.adoc[]
 
 .request-fields
 include::{snippets}/board-create/response-fields.adoc[]
 
+.http-response
+include::{snippets}/board-create/http-response.adoc[]
+
 ==== 게시판 조회
+.curl-request
+include::{snippets}/board-get/curl-request.adoc[]
+
 .http-request
 include::{snippets}/board-get/http-request.adoc[]
 
-.path-parameters
-include::{snippets}/board-get/path-parameters.adoc[]
+.response-fields
+include::{snippets}/board-get/response-fields.adoc[]
 
 .http-response
 include::{snippets}/board-get/http-response.adoc[]
 
-.response-body
-include::{snippets}/board-get/response-body.adoc[]
-
-.request-fields
-include::{snippets}/board-get/response-fields.adoc[]
-
 ==== 게시판 전체 조회
+.curl-request
+include::{snippets}/board-list-get/curl-request.adoc[]
+
 .http-request
 include::{snippets}/board-list-get/http-request.adoc[]
 
-.request-headers
-include::{snippets}/board-list-get/request-headers.adoc[]
-
-.path-parameters
-include::{snippets}/board-list-get/request-parameters.adoc[]
+.response-fields
+include::{snippets}/board-list-get/response-fields.adoc[]
 
 .http-response
 include::{snippets}/board-list-get/http-response.adoc[]
 
-.response-body
-include::{snippets}/board-list-get/response-body.adoc[]
-
-.request-fields
-include::{snippets}/board-list-get/response-fields.adoc[]
-
 ==== 게시판 업데이트
+.curl-request
+include::{snippets}/board-update/curl-request.adoc[]
+
 .http-request
 include::{snippets}/board-update/http-request.adoc[]
 
-.request-headers
-include::{snippets}/board-update/request-headers.adoc[]
-
-.path-parameters
-include::{snippets}/board-update/path-parameters.adoc[]
-
-.request-body
-include::{snippets}/board-update/request-body.adoc[]
-
-.request-fields
-include::{snippets}/board-update/request-fields.adoc[]
+.response-fields
+include::{snippets}/board-update/response-fields.adoc[]
 
 .http-response
 include::{snippets}/board-update/http-response.adoc[]
 
-.response-body
-include::{snippets}/board-update/response-body.adoc[]
-
-.request-fields
-include::{snippets}/board-update/response-fields.adoc[]
-
 ==== 게시판 삭제
+.curl-request
+include::{snippets}/board-delete/curl-request.adoc[]
+
 .http-request
 include::{snippets}/board-delete/http-request.adoc[]
-
-.request-headers
-include::{snippets}/board-delete/request-headers.adoc[]
-
-.path-parameters
-include::{snippets}/board-delete/path-parameters.adoc[]
 
 .http-response
 include::{snippets}/board-delete/http-response.adoc[]
@@ -290,81 +218,109 @@ include::{snippets}/comment-img-upload/response-body.adoc[]
 .response-fields
 include::{snippets}/comment-img-upload/response-fields.adoc[]
 
-== CommentController
-
-==== 댓글 전체 조회
+== ReviewerController
+==== 리뷰어 등록
 .http-request
-include::{snippets}/comment-list-get/http-request.adoc[]
-
-.path-parameters
-include::{snippets}/comment-list-get/request-parameters.adoc[]
-
-.http-response
-include::{snippets}/comment-list-get/http-response.adoc[]
-
-.response-body
-include::{snippets}/comment-list-get/response-body.adoc[]
-
-.request-fields
-include::{snippets}/comment-list-get/response-fields.adoc[]
-
-==== 댓글 작성
-.http-request
-include::{snippets}/comment-create/http-request.adoc[]
-
+include::{snippets}/reviewer-enroll/http-request.adoc[]
 .request-headers
-include::{snippets}/comment-create/request-headers.adoc[]
-
+include::{snippets}/reviewer-enroll/request-headers.adoc[]
 .request-body
-include::{snippets}/comment-create/request-body.adoc[]
-
+include::{snippets}/reviewer-enroll/request-body.adoc[]
 .request-fields
-include::{snippets}/comment-create/request-fields.adoc[]
-
+include::{snippets}/reviewer-enroll/request-fields.adoc[]
 .http-response
-include::{snippets}/comment-create/http-response.adoc[]
-
+include::{snippets}/reviewer-enroll/http-response.adoc[]
 .response-body
-include::{snippets}/comment-create/response-body.adoc[]
+include::{snippets}/reviewer-enroll/response-body.adoc[]
+.response-fields
+include::{snippets}/reviewer-enroll/response-fields.adoc[]
 
-.request-fields
-include::{snippets}/comment-create/response-fields.adoc[]
-
-==== 댓글 수정
+==== 리뷰어 변경
 .http-request
-include::{snippets}/comment-update/http-request.adoc[]
-
+include::{snippets}/reviewer-update/http-request.adoc[]
 .request-headers
-include::{snippets}/comment-update/request-headers.adoc[]
-
+include::{snippets}/reviewer-update/request-headers.adoc[]
 .path-parameters
-include::{snippets}/comment-update/path-parameters.adoc[]
-
+include::{snippets}/reviewer-update/path-parameters.adoc[]
 .request-body
-include::{snippets}/comment-update/request-body.adoc[]
-
+include::{snippets}/reviewer-update/request-body.adoc[]
 .request-fields
-include::{snippets}/comment-update/request-fields.adoc[]
-
+include::{snippets}/reviewer-update/request-fields.adoc[]
 .http-response
-include::{snippets}/comment-update/http-response.adoc[]
-
+include::{snippets}/reviewer-update/http-response.adoc[]
 .response-body
-include::{snippets}/comment-update/response-body.adoc[]
+include::{snippets}/reviewer-update/response-body.adoc[]
+.response-fields
+include::{snippets}/reviewer-update/response-fields.adoc[]
 
-.request-fields
-include::{snippets}/comment-update/response-fields.adoc[]
-
-==== 댓글 삭제
+==== 리뷰어들 조회
 .http-request
-include::{snippets}/comment-delete/http-request.adoc[]
-
+include::{snippets}/reviewer-list-get/http-request.adoc[]
 .request-headers
-include::{snippets}/comment-delete/request-headers.adoc[]
-
-.path-parameters
-include::{snippets}/comment-delete/path-parameters.adoc[]
-
+include::{snippets}/reviewer-list-get/request-headers.adoc[]
+.request-body
+include::{snippets}/reviewer-list-get/request-body.adoc[]
 .http-response
-include::{snippets}/comment-delete/http-response.adoc[]
+include::{snippets}/reviewer-list-get/http-response.adoc[]
+.response-body
+include::{snippets}/reviewer-list-get/response-body.adoc[]
+.response-fields
+include::{snippets}/reviewer-list-get/response-fields.adoc[]
 
+==== 리뷰어 조회
+.http-request
+include::{snippets}/reviewer-get/http-request.adoc[]
+.request-headers
+include::{snippets}/reviewer-get/request-headers.adoc[]
+.path-parameters
+include::{snippets}/reviewer-get/path-parameters.adoc[]
+.request-body
+include::{snippets}/reviewer-get/request-body.adoc[]
+.http-response
+include::{snippets}/reviewer-get/http-response.adoc[]
+.response-body
+include::{snippets}/reviewer-get/response-body.adoc[]
+.response-fields
+include::{snippets}/reviewer-get/response-fields.adoc[]
+
+==== 리뷰어 삭제
+.http-request
+include::{snippets}/reviewer-delete/http-request.adoc[]
+.request-headers
+include::{snippets}/reviewer-delete/request-headers.adoc[]
+.path-parameters
+include::{snippets}/reviewer-delete/path-parameters.adoc[]
+.request-body
+include::{snippets}/reviewer-delete/request-body.adoc[]
+.http-response
+include::{snippets}/reviewer-delete/http-response.adoc[]
+.response-body
+include::{snippets}/reviewer-delete/response-body.adoc[]
+
+==== 경력 사항 조회
+.http-request
+include::{snippets}/careers-get/http-request.adoc[]
+.request-headers
+include::{snippets}/careers-get/request-headers.adoc[]
+.request-body
+include::{snippets}/careers-get/request-body.adoc[]
+.http-response
+include::{snippets}/careers-get/http-response.adoc[]
+.response-body
+include::{snippets}/careers-get/response-body.adoc[]
+.response-fields
+include::{snippets}/careers-get/response-fields.adoc[]
+
+==== 포지션 조회
+.http-request
+include::{snippets}/positions-get/http-request.adoc[]
+.request-headers
+include::{snippets}/positions-get/request-headers.adoc[]
+.request-body
+include::{snippets}/positions-get/request-body.adoc[]
+.http-response
+include::{snippets}/positions-get/http-response.adoc[]
+.response-body
+include::{snippets}/positions-get/response-body.adoc[]
+.response-fields
+include::{snippets}/positions-get/response-fields.adoc[]

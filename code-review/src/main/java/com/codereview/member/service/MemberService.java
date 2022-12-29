@@ -7,15 +7,16 @@ import com.codereview.member.entity.Verified;
 import com.codereview.member.entity.Member;
 import com.codereview.member.mapper.MemberMapper;
 import com.codereview.member.repository.MemberRepository;
-import com.codereview.util.email.event.MemberRegistrationApplicationEvent;
+import com.codereview.util.CustomBeanUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -24,8 +25,7 @@ public class MemberService {
   private final MemberRepository memberRepository;
   private final MemberMapper mapper;
   private final PasswordEncoder passwordEncoder;
-  private final ApplicationEventPublisher publisher;
-
+  private final CustomBeanUtils<Member> beanUtils;
 
   public Member createMember(Member member) {
     verifyEmail(member.getEmail());
@@ -33,24 +33,18 @@ public class MemberService {
     member.setRoles("ROLE_GUEST");
     member.setProvider(AuthProvider.local);
     member.setEmailVerified(Verified.N);
-    member.setVerifiedCode(UUID.randomUUID().toString());
-    publisher.publishEvent(new MemberRegistrationApplicationEvent(this, member));
     return memberRepository.save(member);
   }
 
+  @CachePut(key = "#member.email", value = "loadUserByUsername")
   public Member updateMember(Member member) {
-
     Member findMember = findVerifiedMember(member.getMemberId());
+    Member updatedMember = beanUtils.copyNonNullProperties(member, findMember);
 
-    Optional.ofNullable(member.getNickName()).ifPresent(findMember::setNickName);
-    Optional.ofNullable(member.getPassword()).ifPresent(findMember::setPassword);
-    Optional.ofNullable(member.getPhone()).ifPresent(findMember::setPhone);
-    Optional.ofNullable(member.getGithubUrl()).ifPresent(findMember::setGithubUrl);
-    Optional.ofNullable(member.getProfileImg()).ifPresent(findMember::setProfileImg);
-    Optional.ofNullable(member.getSkills()).ifPresent(findMember::setSkills);
-    return memberRepository.save(findMember);
+    return memberRepository.save(updatedMember);
   }
 
+  @CacheEvict(key = "#root.target.findById(#memberId).email", value = "loadUserByUsername")
   public void deleteMember(long memberId) {
     Member member = findVerifiedMember(memberId);
     memberRepository.delete(member);
