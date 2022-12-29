@@ -27,7 +27,8 @@ public enum ExceptionCode {
   INVALID_FILE_FORMAT(500, "Invalid file format"),
   IMG_NOT_FOUND(404, "Image not found"),
   REVIEWER_ALREADY_EXISTS(409, "Reviewer already exists"),
-  REVIEWER_NOT_FOUND(404, "Reviewer not found"), FORBIDDEN(403, "Forbidden");
+  REVIEWER_NOT_FOUND(404, "Reviewer not found"), FORBIDDEN(403, "Forbidden"),
+  COMMENT_NOT_FOUND(404,"Comment not found");
 
   @Getter
   private int status;
