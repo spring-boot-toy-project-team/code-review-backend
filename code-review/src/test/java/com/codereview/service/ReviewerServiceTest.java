@@ -133,6 +133,44 @@ public class ReviewerServiceTest {
       existsReviewerByMemberIdMethod.invoke(reviewerService, reviewer.getReviewerId());
     }
   }
+
+  @Nested
+  @DisplayName("리뷰어 식별자로 등록된 리뷰어 조회 테스트")
+  public class existsReviewerByIdTest {
+    private Member member;
+
+    @BeforeEach
+    public void beforeEach() throws Exception {
+      member = MemberStubData.member();
+    }
+
+    @Test
+    @DisplayName("리뷰 식별자로 등록된 리뷰어 존재 테스트")
+    public void existsReviewerByIdExceptionTest() throws Exception {
+      // given
+      Reviewer reviewer = ReviewerStubData.reviewer(member);
+      given(reviewerRepository.findById(Mockito.anyLong())).willReturn(Optional.of(reviewer));
+
+      // when
+
+      // then
+      reviewerService.existsReviewerById(reviewer.getReviewerId());
+    }
+
+    @Test
+    @DisplayName("리뷰 식별자로 등록된 리뷰어 미존재 테스트")
+    public void existsReviewerByIdNotFoundTest() throws Exception {
+      // given
+      Reviewer reviewer = ReviewerStubData.reviewer(member);
+      given(reviewerRepository.findById(Mockito.anyLong())).willReturn(Optional.empty());
+
+      // when
+
+      // then
+      Assertions.assertThatThrownBy(() -> reviewerService.existsReviewerById(reviewer.getReviewerId()))
+        .isInstanceOf(BusinessLogicException.class);
+    }
+  }
   
   @Nested
   @DisplayName("리뷰어 삭제 테스트")
