@@ -13,7 +13,7 @@ public interface MemberMapper {
 
     Member loginDtoToMember(MemberRequestDto.LoginDto loginDto);
 
-    MemberResponseDto.MemberInfo memberToMemberInfo(Member member);
+    MemberResponseDto.MemberInfoDto memberToMemberInfo(Member member);
 
     Member updateDtoToMember(MemberRequestDto.UpdateDto updateDto);
 

@@ -35,6 +35,13 @@ public class ReviewerService {
       throw new BusinessLogicException(ExceptionCode.REVIEWER_ALREADY_EXISTS);
   }
 
+  @Transactional(readOnly = true)
+  public void existsReviewerById(Long reviewerId) {
+    Optional<Reviewer> optionalReviewer = reviewerRepository.findById(reviewerId);
+    if(!optionalReviewer.isPresent())
+      throw new BusinessLogicException(ExceptionCode.REVIEWER_NOT_FOUND);
+  }
+
   public void deleteReviewer(Long reviewerId, Long memberId) {
     Reviewer findReviewer = findVerifiedReviewerByMemberId(reviewerId);
     if(!Objects.equals(findReviewer.getMember().getMemberId(), memberId)) {
