@@ -1,6 +1,5 @@
 package com.codereview.member.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,12 +13,11 @@ public class MemberResponseDto {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class MemberInfo {
+    public static class MemberInfoDto {
         private String nickName;
         private String profileImg;
         private String githubUrl;
         private Set<String> skills;
-
     }
 
     @Data
