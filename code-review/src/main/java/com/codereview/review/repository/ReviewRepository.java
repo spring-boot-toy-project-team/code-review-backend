@@ -1,9 +1,11 @@
-package com.codereview.enrollment.repository;
+package com.codereview.review.repository;
 
-import com.codereview.enrollment.entity.Enrollment;
+import com.codereview.review.entity.Review;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
+public interface ReviewRepository extends JpaRepository<Review, Long>, ReviewRepositoryCustom {
+
+
 }

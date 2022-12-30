@@ -1,6 +1,7 @@
 package com.codereview.review.entity;
 
-public enum Enroll {
+public enum Approve {
   Y,
-  N
+  N,
+  YET
 }
