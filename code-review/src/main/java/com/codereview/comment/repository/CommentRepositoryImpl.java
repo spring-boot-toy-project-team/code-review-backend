@@ -20,11 +20,11 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom{
   @Override
   public Page<Comment> findAllByBoardId(long boardId, Pageable pageable) {
     List<Comment> content = jpaQueryFactory
-            .select(comment)
-            .from(comment)
-            .where(comment.board.boardId.eq(boardId))
-            .orderBy(comment.createdAt.desc())
-            .fetch();
+      .select(comment)
+      .from(comment)
+      .where(comment.board.boardId.eq(boardId))
+      .orderBy(comment.createdAt.desc())
+      .fetch();
     return new PageImpl<>(content, pageable, content.size());
   }
 }
