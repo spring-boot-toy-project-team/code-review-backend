@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,6 +29,8 @@ public class MemberServiceTest {
   private MemberRepository memberRepository;
   @Mock
   private PasswordEncoder passwordEncoder;
+  @Mock
+  private ApplicationEventPublisher publisher;
 
   @Test
   @DisplayName("회원 이메일 유효성 검사 테스트")
@@ -53,6 +56,7 @@ public class MemberServiceTest {
       .when(memberService)
       .verifyEmail(Mockito.anyString());
     when(memberRepository.save(Mockito.any(Member.class))).thenReturn(member);
+
 
     // when
     Member savedMember = memberService.createMember(member);

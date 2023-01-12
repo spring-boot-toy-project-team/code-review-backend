@@ -36,9 +36,9 @@ public class CommentController {
    * 댓글 리스트 조회
    */
   @GetMapping
-  public ResponseEntity<MultiResponseWithPageInfoDto> getComments(
+  public ResponseEntity<MultiResponseWithPageInfoDto> getComments(@Positive @PathVariable("board-id") long boardId,
     @PageableDefault(size = 10, sort = "commentId", direction = Sort.Direction.DESC) Pageable pageable){
-    RestPage<Comment> commentRestPage = commentService.getComments(pageable);
+    RestPage<Comment> commentRestPage = commentService.getComments(boardId,pageable);
     List<Comment> commentList = commentRestPage.getContent();
     return new ResponseEntity<>(new MultiResponseWithPageInfoDto<>(mapper.commentListToCommentDtoList(commentList), commentRestPage),
             HttpStatus.OK);

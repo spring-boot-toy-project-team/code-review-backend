@@ -24,8 +24,8 @@ public class CommentService {
 
   @Transactional(readOnly = true)
   @Cacheable(key = "{#page, #size}", value = "getComments")
-  public RestPage<Comment> getComments(Pageable pageable) {
-    return new RestPage<>(commentRepository.findAll(pageable));
+  public RestPage<Comment> getComments(long boardId, Pageable pageable) {
+    return new RestPage<>(commentRepository.findAllByBoardId(boardId,pageable));
   }
 
   /**
@@ -48,20 +48,19 @@ public class CommentService {
   /**
    * 댓글 삭제
    */
-
   public void deleteCommentByIdAndMemberId(long commendId, Long memberId) {
     Comment findComment = findVerifiedCommentWithMemberId(commendId, memberId);
     commentRepository.delete(findComment);
   }
 
   @Transactional(readOnly = true)
-  private Comment findVerifiedComment(long commentId){
+  public Comment findVerifiedComment(long commentId){
     Optional<Comment> optionalComment = commentRepository.findById(commentId);
     return optionalComment.orElseThrow(() -> new BusinessLogicException(ExceptionCode.COMMENT_NOT_FOUND));
   }
 
   @Transactional(readOnly = true)
-  private Comment findVerifiedCommentWithMemberId(long commentId, long memberId){
+  public Comment findVerifiedCommentWithMemberId(long commentId, long memberId){
     Comment findComment = findVerifiedComment(commentId);
     if (findComment.getMember().getMemberId() != memberId){
       throw new BusinessLogicException(ExceptionCode.MEMBER_NOT_FOUND);

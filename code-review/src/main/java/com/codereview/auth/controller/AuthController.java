@@ -61,19 +61,6 @@ public class AuthController {
   }
 
   /**
-   * 이메일 인증 요청
-   */
-  @GetMapping("/validation")
-  public ResponseEntity<MessageResponseDto> validation(@NotBlank @PathParam("email") String email){
-
-    authService.sendEmail(email);
-
-    return new ResponseEntity<>(MessageResponseDto.builder()
-      .message("Send Email")
-      .build(), HttpStatus.OK);
-  }
-
-  /**
    * 이메일 인증
    */
   @GetMapping("/email-validation")

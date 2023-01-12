@@ -189,40 +189,40 @@ public class AuthControllerTest {
       );
   }
 
-  @Test
-  @DisplayName("이메일 인증 요청")
-  void validation() throws Exception {
-    //given
-    Member member = MemberStubData.guestMember();
-    String email = member.getEmail();
-
-    doNothing().when(authService).sendEmail(Mockito.anyString());
-
-    //when
-    ResultActions actions = mockMvc.perform(
-       get("/auth/validation?email={email}",email)
-          .contentType(MediaType.APPLICATION_JSON)
-          .accept(MediaType.APPLICATION_JSON)
-    );
-
-    //then
-    actions
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Send Email"))
-            .andDo(
-              document("SendEmail",
-                getRequestPreProcessor(),
-                getResponsePreProcessor(),
-                requestParameters(
-                  parameterWithName("email").description("이메일")
-                ),
-                responseFields(
-                  List.of(
-                    fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"))
-                )
-              )
-            );
-  }
+//  @Test
+//  @DisplayName("이메일 인증 요청")
+//  void validation() throws Exception {
+//    //given
+//    Member member = MemberStubData.guestMember();
+//    String email = member.getEmail();
+//
+//    doNothing().when(authService).sendEmail(Mockito.anyString());
+//
+//    //when
+//    ResultActions actions = mockMvc.perform(
+//       get("/auth/validation?email={email}",email)
+//          .contentType(MediaType.APPLICATION_JSON)
+//          .accept(MediaType.APPLICATION_JSON)
+//    );
+//
+//    //then
+//    actions
+//            .andExpect(status().isOk())
+//            .andExpect(jsonPath("$.message").value("Send Email"))
+//            .andDo(
+//              document("SendEmail",
+//                getRequestPreProcessor(),
+//                getResponsePreProcessor(),
+//                requestParameters(
+//                  parameterWithName("email").description("이메일")
+//                ),
+//                responseFields(
+//                  List.of(
+//                    fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"))
+//                )
+//              )
+//            );
+//  }
 
   @Test
   @DisplayName("이메일 인증")

@@ -15,27 +15,28 @@ public interface CommentMapper {
 
   default Comment createCommentDtoToComment(CommentRequestDto.CommentDto commentDto){
     return Comment.builder()
-            .member(Member.builder().memberId(commentDto.getMemberId()).build())
-            .board(Board.builder().boardId(commentDto.getBoardId()).build())
-            .contents(commentDto.getContents())
-            .build();
+      .member(Member.builder().memberId(commentDto.getMemberId()).build())
+      .board(Board.builder().boardId(commentDto.getBoardId()).build())
+      .contents(commentDto.getContents())
+      .build();
   }
 
   default CommentResponseDto.CommentInfoDto commentToCommentInfo(Comment comment){
     return CommentResponseDto.CommentInfoDto.builder()
-            .commentId(comment.getCommentId())
-            .contents(comment.getContents())
-            .createdAt(comment.getCreatedAt())
-            .modifiedAt(comment.getModifiedAt())
-            .build();
+      .commentId(comment.getCommentId())
+      .contents(comment.getContents())
+      .nickName(comment.getMember().getNickName())
+      .createdAt(comment.getCreatedAt())
+      .modifiedAt(comment.getModifiedAt())
+      .build();
   }
 
   default Comment updateCommentToComment(CommentRequestDto.updateCommentDto updateCommentDto){
     return Comment.builder()
-            .member(Member.builder().memberId(updateCommentDto.getMemberId()).build())
-            .board(Board.builder().boardId(updateCommentDto.getBoardId()).build())
-            .commentId(updateCommentDto.getCommentId())
-            .contents(updateCommentDto.getContents())
-            .build();
+      .member(Member.builder().memberId(updateCommentDto.getMemberId()).build())
+      .board(Board.builder().boardId(updateCommentDto.getBoardId()).build())
+      .commentId(updateCommentDto.getCommentId())
+      .contents(updateCommentDto.getContents())
+      .build();
   }
 }
